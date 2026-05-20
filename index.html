@@ -465,12 +465,98 @@
         body.lights-off #project-overlay p { color: #FFFDD0; }
 
         /* ── Scroll Reveal ── */
+        /* ══════════════════════════════════════════
+           SCROLL MOTION SYSTEM
+           Variants triggered by data-motion attribute.
+           Base state: hidden. .is-visible: shown.
+           Desktop-only depth effects; mobile gets
+           simplified fade-up only (respects prefers-
+           reduced-motion).
+        ══════════════════════════════════════════ */
+
+        /* ── Base reveal (legacy + default) ── */
         .reveal {
             opacity: 0;
             transform: translateY(28px);
-            transition: opacity 0.7s ease, transform 0.7s ease;
+            transition: opacity 0.72s cubic-bezier(0.22,1,0.36,1),
+                        transform 0.72s cubic-bezier(0.22,1,0.36,1);
         }
         .reveal.visible { opacity: 1; transform: translateY(0); }
+
+        /* ── data-motion variants ── */
+        [data-motion] {
+            opacity: 0;
+            transition: opacity 0.75s cubic-bezier(0.22,1,0.36,1),
+                        transform 0.75s cubic-bezier(0.22,1,0.36,1),
+                        filter 0.75s ease;
+            will-change: opacity, transform;
+        }
+        [data-motion="fade-up"]    { transform: translateY(40px); }
+        [data-motion="fade-down"]  { transform: translateY(-30px); }
+        [data-motion="fade-left"]  { transform: translateX(50px); }
+        [data-motion="fade-right"] { transform: translateX(-50px); }
+        [data-motion="scale-up"]   { transform: scale(0.88); filter: blur(2px); }
+        [data-motion="scale-down"] { transform: scale(1.08); filter: blur(1px); }
+        [data-motion="rotate-in"]  { transform: rotate(-4deg) translateY(28px); }
+        [data-motion="flip-up"]    { transform: perspective(600px) rotateX(18deg) translateY(30px); }
+
+        [data-motion].is-visible {
+            opacity: 1;
+            transform: none;
+            filter: none;
+        }
+
+        /* ── Stagger children: parent gets data-stagger, children animate sequentially ── */
+        [data-stagger] > * {
+            opacity: 0;
+            transform: translateY(24px);
+            transition: opacity 0.6s cubic-bezier(0.22,1,0.36,1),
+                        transform 0.6s cubic-bezier(0.22,1,0.36,1);
+        }
+        [data-stagger].is-visible > *:nth-child(1)  { opacity:1; transform:none; transition-delay: 0.05s; }
+        [data-stagger].is-visible > *:nth-child(2)  { opacity:1; transform:none; transition-delay: 0.14s; }
+        [data-stagger].is-visible > *:nth-child(3)  { opacity:1; transform:none; transition-delay: 0.23s; }
+        [data-stagger].is-visible > *:nth-child(4)  { opacity:1; transform:none; transition-delay: 0.32s; }
+        [data-stagger].is-visible > *:nth-child(5)  { opacity:1; transform:none; transition-delay: 0.41s; }
+        [data-stagger].is-visible > *:nth-child(6)  { opacity:1; transform:none; transition-delay: 0.50s; }
+        [data-stagger].is-visible > *:nth-child(n+7){ opacity:1; transform:none; transition-delay: 0.58s; }
+
+        /* ── Custom delay helpers ── */
+        [data-delay="100"] { transition-delay: 0.10s !important; }
+        [data-delay="200"] { transition-delay: 0.20s !important; }
+        [data-delay="300"] { transition-delay: 0.30s !important; }
+        [data-delay="400"] { transition-delay: 0.40s !important; }
+        [data-delay="500"] { transition-delay: 0.50s !important; }
+        [data-delay="600"] { transition-delay: 0.60s !important; }
+        [data-delay="700"] { transition-delay: 0.70s !important; }
+
+        /* ── Section heading split lines ── */
+        .motion-line {
+            display: block;
+            overflow: hidden;
+        }
+        .motion-line-inner {
+            display: block;
+            transform: translateY(110%);
+            transition: transform 0.80s cubic-bezier(0.22,1,0.36,1);
+        }
+        .is-visible .motion-line-inner,
+        [data-motion].is-visible .motion-line-inner {
+            transform: translateY(0);
+        }
+        .motion-line-inner:nth-child(2) { transition-delay: 0.12s; }
+        .motion-line-inner:nth-child(3) { transition-delay: 0.22s; }
+
+        /* ── Scroll-progress parallax depth (CSS custom property set by JS) ── */
+        .motion-parallax {
+            will-change: transform;
+        }
+
+        /* ── Reduce motion: honour OS preference ── */
+        @media (prefers-reduced-motion: reduce) {
+            [data-motion], [data-stagger] > *, .reveal,
+            .motion-line-inner { transition: none !important; opacity: 1 !important; transform: none !important; filter: none !important; }
+        }
 
         /* ── Nav Active Indicator ── */
         .nav-icon.active-nav {
@@ -1115,17 +1201,17 @@
             </div>
 
             <!-- ═══ LAYER 5 — ambient blob accents ═══ -->
-            <div class="absolute -top-28 -right-28 w-80 h-80 rounded-full pointer-events-none animate-blob" style="
+            <div class="absolute -top-28 -right-28 w-80 h-80 rounded-full pointer-events-none animate-blob motion-parallax" data-depth-speed="0.08" style="
                 background: rgba(255,230,140,0.22);
                 filter: blur(72px);
                 animation-delay:0s;
             "></div>
-            <div class="absolute top-16 -left-16 w-64 h-64 rounded-full pointer-events-none animate-blob" style="
+            <div class="absolute top-16 -left-16 w-64 h-64 rounded-full pointer-events-none animate-blob motion-parallax" data-depth-speed="0.12" style="
                 background: rgba(180,170,230,0.28);
                 filter: blur(64px);
                 animation-delay:2.5s;
             "></div>
-            <div class="absolute bottom-0 right-1/3 w-72 h-40 rounded-full pointer-events-none animate-blob" style="
+            <div class="absolute bottom-0 right-1/3 w-72 h-40 rounded-full pointer-events-none animate-blob motion-parallax" data-depth-speed="0.06" style="
                 background: rgba(200,190,240,0.20);
                 filter: blur(80px);
                 animation-delay:5s;
@@ -1136,7 +1222,7 @@
 
                 <!-- ── JOURNEY TAGS — lifted to content level, top-right, aligns with eyebrow ── -->
                 <div class="absolute top-10 md:top-16 lg:top-20 right-10 md:right-16 lg:right-20 z-30 pointer-events-none flex flex-col items-end gap-2.5"
-                     style="max-width:228px; width:calc(50% - 3rem);" aria-hidden="true">
+                     style="max-width:228px; width:calc(50% - 3rem);" aria-hidden="true" data-stagger>
 
                     <!-- Label -->
                     <p class="hero-tags-label font-mono text-[9px] uppercase tracking-[0.26em] text-navy/35 mb-0.5 self-start">✦ my journey tags ✦</p>
@@ -1188,27 +1274,26 @@
                 <div class="flex flex-col justify-end gap-0">
 
                     <!-- Eyebrow line -->
-                    <!-- Eyebrow line -->
-                    <div class="flex items-center gap-3 mb-6">
+                    <div class="flex items-center gap-3 mb-6" data-motion="fade-up" data-delay="100">
                         <span class="font-mono text-[10px] tracking-[0.28em] uppercase text-navy/50 hero-text-el">✦ step inside ✦</span>
                         <div class="flex-1 h-px bg-navy/15 max-w-[60px]"></div>
                         <span class="font-mono text-[10px] tracking-[0.20em] text-navy/35 hero-text-el">02 : 47 AM</span>
                     </div>
 
                     <!-- Main heading — "Welcome to" -->
-                    <h1 class="font-bold tracking-tight text-navy leading-[1.00] mb-1 hero-text-el"
+                    <h1 class="font-bold tracking-tight text-navy leading-[1.00] mb-1 hero-text-el" data-motion="fade-up" data-delay="180"
                         style="font-size: clamp(3.2rem, 6.5vw, 5.4rem); font-family:'Space Grotesk',sans-serif; letter-spacing:-0.025em;">
                         Welcome to
                     </h1>
 
                     <!-- "Nicole's room" — name woven into the serif italic line -->
-                    <h1 class="font-serif italic font-normal leading-[1.05] mb-8 hero-text-el"
+                    <h1 class="font-serif italic font-normal leading-[1.05] mb-8 hero-text-el" data-motion="fade-up" data-delay="260"
                         style="font-size: clamp(2.08rem, 4.48vw, 3.68rem); letter-spacing:-0.01em; color:#2E3A4D;">
                         <span class="hero-name-inline">Nicole's</span> room
                     </h1>
 
                     <!-- Bio — personal, bedroom-note tone -->
-                    <p class="font-sans hero-text-el mb-8"
+                    <p class="font-sans hero-text-el mb-8" data-motion="fade-up" data-delay="340"
                        style="font-size: clamp(0.92rem, 1.25vw, 1.05rem); max-width: 400px; font-weight:400; color:rgba(46,58,77,0.68); line-height:1.75;">
                         crafting stories that feel like home&nbsp;🌙 —
                         pull up a chair, turn on the lamp,
@@ -1216,7 +1301,7 @@
                     </p>
 
                     <!-- CTA row -->
-                    <div class="flex flex-wrap items-center gap-5">
+                    <div class="flex flex-wrap items-center gap-5" data-motion="fade-up" data-delay="420">
                         <a href="#about"
                            class="hero-cta-primary bg-navy text-butter px-7 py-3 rounded-full font-mono text-[11px] uppercase tracking-widest font-bold hover:opacity-90 active:scale-95 transition-all whitespace-nowrap shadow-[0_4px_18px_rgba(46,58,77,0.22)] hero-text-el">
                             Get to know me
@@ -1430,7 +1515,7 @@
                 <div class="grid md:grid-cols-2 gap-10 lg:gap-16 items-start relative z-10">
 
                     <!-- Left: Arched Window — with mouse-parallax tilt -->
-                    <div class="flex justify-center md:justify-start">
+                    <div class="flex justify-center md:justify-start" data-motion="fade-right" data-delay="100">
                         <div id="about-window" class="relative w-[360px] h-[480px] flex-shrink-0 mx-auto md:mx-0" style="perspective:900px;">
                             <div class="window-tilt-inner w-full h-full" style="transform-style:preserve-3d; transition:transform 0.12s ease-out;">
 
@@ -1474,7 +1559,7 @@
                     </div>
 
                     <!-- Right: Bio content -->
-                    <div class="relative z-10 pt-2 md:pt-0">
+                    <div class="relative z-10 pt-2 md:pt-0" data-motion="fade-left" data-delay="200">
 
                         <!-- Heading with hover-swap words -->
                         <h2 class="font-serif italic font-bold text-navy leading-[1.15] text-3xl lg:text-4xl mb-3">
@@ -1537,7 +1622,7 @@
         </section>
 
         <!-- ── LATE-NIGHT IDEAS (Projects) ── -->
-        <section id="ideas" class="mb-32 pt-8 reveal" data-nav-section="ideas">
+        <section id="ideas" class="mb-32 pt-8 reveal" data-nav-section="ideas" data-motion="fade-up">
             <div id="bookshelf-root" style="overflow: visible; position: relative; z-index: 10;"></div>
             <!-- legacy moodboard-grid kept empty so existing JS filter/overlay wiring doesn't break -->
             <div style="display:none"><div class="grid" id="moodboard-grid">
@@ -1823,20 +1908,72 @@
                         </div>
                     </div>
 
+                    <!-- Card 15: Florence by Mills — Brand Show & Tell -->
+                    <div class="project-card-container h-[380px] cursor-pointer" data-category="branding-design">
+                        <div class="polaroid-inner">
+                            <div class="polaroid-face flex flex-col">
+                                <div class="washi-tape" style="transform: translateX(-50%) rotate(-2deg); background-color: rgba(252,235,235,0.85);"></div>
+                                <div class="polaroid-img-placeholder flex-grow">
+                                    <img src="https://images.unsplash.com/photo-1596462502278-27bfdc403348?q=80&w=800&auto=format&fit=crop" class="w-full h-full object-cover" alt="Florence by Mills" loading="lazy" decoding="async">
+                                </div>
+                                <div class="mt-4 text-center font-mono text-sm font-bold text-navy">Florence by Mills</div>
+                            </div>
+                            <div class="polaroid-back">
+                                <h3 class="font-bold text-xl mb-3 text-navy">Florence by Mills — Brand Show & Tell</h3>
+                                <p class="text-sm mb-6 text-navy/80 font-serif italic">Decoding the brand DNA behind Millie Bobby Brown's Gen-Z clean beauty line.</p>
+                                <button class="view-details-btn bg-navy text-butter px-6 py-2 rounded-full text-xs font-mono uppercase tracking-widest hover:opacity-80 transition-opacity"
+                                    data-title="Florence by Mills — Brand Show & Tell"
+                                    data-image="https://images.unsplash.com/photo-1596462502278-27bfdc403348?q=80&w=1200&auto=format&fit=crop"
+                                    data-desc="A Brand Show & Tell presentation that unpacks Florence by Mills, the clean beauty brand co-founded by Millie Bobby Brown. The project explores how the brand speaks directly to Gen-Z through radical authenticity, skin-positive messaging, and a visual identity that feels more like a friend's bedroom than a beauty counter. The analysis covers brand positioning, tone of voice, visual language, target audience segmentation, and competitive landscape — examining how Florence by Mills carved a credible niche in an oversaturated market by leading with values over vanity."
+                                    data-role="Brand Strategy & Presentation"
+                                    data-tag="School Project"
+                                    data-link="https://drive.google.com/file/d/14UGtr0HHa3NeJOI0GKToWJWSQpD2UpRR/view?usp=sharing">
+                                    View Details
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 16: Uniqlo — Social Media Marketing Audit -->
+                    <div class="project-card-container h-[380px] cursor-pointer" data-category="marketing-campaigns">
+                        <div class="polaroid-inner">
+                            <div class="polaroid-face flex flex-col">
+                                <div class="washi-tape" style="transform: translateX(-50%) rotate(1deg); background-color: rgba(200,200,200,0.75);"></div>
+                                <div class="polaroid-img-placeholder flex-grow">
+                                    <img src="https://images.unsplash.com/photo-1558769132-cb1aea458c5e?q=80&w=800&auto=format&fit=crop" class="w-full h-full object-cover" alt="Uniqlo Audit" loading="lazy" decoding="async">
+                                </div>
+                                <div class="mt-4 text-center font-mono text-sm font-bold text-navy">Uniqlo Audit</div>
+                            </div>
+                            <div class="polaroid-back">
+                                <h3 class="font-bold text-xl mb-3 text-navy">Uniqlo — Social Media Marketing Audit</h3>
+                                <p class="text-sm mb-6 text-navy/80 font-serif italic">A strategic audit uncovering gaps, opportunities, and a roadmap for Uniqlo's social growth.</p>
+                                <button class="view-details-btn bg-navy text-butter px-6 py-2 rounded-full text-xs font-mono uppercase tracking-widest hover:opacity-80 transition-opacity"
+                                    data-title="Uniqlo — Social Media Marketing Audit"
+                                    data-image="https://images.unsplash.com/photo-1558769132-cb1aea458c5e?q=80&w=1200&auto=format&fit=crop"
+                                    data-desc="A comprehensive Social Media Marketing Audit examining Uniqlo's digital presence across key platforms. The project analyses content strategy, posting cadence, audience engagement, tone of voice, and competitive positioning against peers in the accessible fashion space. The audit identifies where Uniqlo's social storytelling succeeds and where opportunities exist to deepen community engagement and localise content for different markets."
+                                    data-role="Social Media Strategy & Audit"
+                                    data-tag="School Project"
+                                    data-link="https://drive.google.com/file/d/1ABmrMs1ZuL9nLs3ieif3Duk98kbbhtV4/view">
+                                    View Details
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div></div>
         </section>
 
         <!-- ── GUESTBOOK (Interactive Flipping Book) ── -->
         <section id="guestbook" class="max-w-2xl mx-auto mb-20 relative z-20 reveal" data-nav-section="guestbook">
-            <div class="text-center mb-12">
+            <div class="text-center mb-12" data-motion="fade-up">
                 <p class="font-mono text-xs uppercase tracking-widest text-navy/50 mb-4">✦ An invitation ✦</p>
                 <h2 class="text-3xl md:text-4xl font-bold mb-3 text-navy">The Blue Hour Note</h2>
                 <p class="font-serif italic text-lg text-navy/70">Leave a trace of your stay while the rest of the world is still asleep</p>
             </div>
 
             <!-- Interactive Flipping Book -->
-            <div class="flipping-book-container max-w-md mx-auto h-[450px] perspective" id="flipping-book">
+            <div class="flipping-book-container max-w-md mx-auto h-[450px] perspective" id="flipping-book" data-motion="scale-up" data-delay="200">
                 <div class="flipping-book-inner relative w-full h-full" style="transform-style: preserve-3d; transition: transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);">
                     
                     <!-- Book Cover (Front) -->
@@ -2224,35 +2361,90 @@
             });
         }
 
-        // ── Scroll Reveal ─────────────────────────────────────────────
-        const revealObserver = new IntersectionObserver((entries) => {
+        // ── Motion Engine ──────────────────────────────────────────────
+        // 1. data-motion variants  2. data-stagger  3. legacy .reveal
+        // 4. scroll-progress parallax  5. section heading counter
+
+        // Unified IntersectionObserver — handles all motion targets
+        const motionObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                    revealObserver.unobserve(entry.target);
-                }
+                if (!entry.isIntersecting) return;
+                const el = entry.target;
+                el.classList.add('is-visible', 'visible'); // covers both systems
+                motionObserver.unobserve(el);
             });
-        }, { threshold: 0.1 });
+        }, { threshold: 0.10, rootMargin: '0px 0px -40px 0px' });
 
-        document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+        // Observe all motion targets
+        document.querySelectorAll(
+            '.reveal, [data-motion], [data-stagger]'
+        ).forEach(el => motionObserver.observe(el));
 
-        // Parallax Scroll Effect — rAF throttled
-        const parallaxElements = document.querySelectorAll('[data-parallax]');
-        let rafScheduled = false;
-        function applyParallax() {
+        // ── Scroll-progress parallax (rAF throttled) ──────────────────
+        // Elements with data-parallax get a gentle vertical drift.
+        // Elements with class .motion-parallax get a depth shift tied
+        // to their position in the viewport.
+        const parallaxEls   = document.querySelectorAll('[data-parallax]');
+        const depthEls      = document.querySelectorAll('.motion-parallax');
+        let   rafScheduled  = false;
+
+        function applyScrollEffects() {
             const scrollY = window.scrollY;
-            parallaxElements.forEach(el => {
+            const vh      = window.innerHeight;
+
+            // Legacy data-parallax blobs
+            parallaxEls.forEach(el => {
                 const speed = parseFloat(el.getAttribute('data-parallax')) || 0.5;
                 el.style.transform = 'translateY(' + (scrollY * speed) + 'px)';
             });
+
+            // Depth parallax — each element shifts relative to its viewport position
+            depthEls.forEach(el => {
+                const rect  = el.getBoundingClientRect();
+                const mid   = rect.top + rect.height / 2;
+                const ratio = (mid - vh / 2) / vh;           // -0.5 … +0.5
+                const speed = parseFloat(el.dataset.depthSpeed) || 0.12;
+                el.style.transform = `translateY(${ratio * speed * 120}px)`;
+            });
+
             rafScheduled = false;
         }
+
         window.addEventListener('scroll', () => {
             if (!rafScheduled) {
                 rafScheduled = true;
-                requestAnimationFrame(applyParallax);
+                requestAnimationFrame(applyScrollEffects);
             }
         }, { passive: true });
+
+        // ── Staggered section counter — numbers tick up on reveal ─────
+        function animateCounter(el) {
+            const target = parseInt(el.dataset.countTo, 10);
+            if (isNaN(target)) return;
+            const duration = 1200;
+            const start    = performance.now();
+            function step(now) {
+                const progress = Math.min((now - start) / duration, 1);
+                const ease     = 1 - Math.pow(1 - progress, 3);
+                el.textContent = Math.round(ease * target);
+                if (progress < 1) requestAnimationFrame(step);
+            }
+            requestAnimationFrame(step);
+        }
+
+        const counterObserver = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    animateCounter(entry.target);
+                    counterObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.5 });
+
+        document.querySelectorAll('[data-count-to]').forEach(el => {
+            el.textContent = '0';
+            counterObserver.observe(el);
+        });
 
            // ── Active Nav Highlight ──────────────────────────────────
         const navLinks = document.querySelectorAll('nav a.nav-link');
@@ -2391,6 +2583,8 @@
       {id:12,category:"marketing-campaigns",title:"Hakuna Matata: HK Disneyland",shortTitle:"Hakuna Matata",tag:"Marketing Campaign",role:"Internal Communications",teaser:"Rekindling Cast Member well-being at HK Disneyland through a 3-phase strategy.",desc:"Behind the enchanting gates of Hong Kong Disneyland, a quiet magic needed rekindling. The 'Hakuna Matata' initiative was a strategic internal communications proposal crafted to revitalize the spirit of frontline Cast Members through a three-phased approach of self-care tools, cross-training programs, and appreciation events.",image:"https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=1200&auto=format&fit=crop",link:"https://drive.google.com/file/d/1_-ypF7SzLsPS2yi6esXJkliuROYUIQpw/view?usp=sharing",linkLabel:"View Project Proposal ↗",spineColor:"#2a2850",textColor:"#d4bc6a",width:70,height:244,font:"serif"},
       {id:13,category:"branding-design",title:"Human Advertising Agency",shortTitle:"Human Agency",tag:"Branding & Identity",role:"Logo Design & Poster Design",teaser:"Ideas born from emotion, not algorithm — a brand identity for a firm that thinks as humans do.",desc:"As the assumed founder of Human Advertising Agency, I built an identity around a single conviction: every idea we produce carries the fingerprint of a real human thought — imperfect, emotional, and unrepeatable. Unlike outputs from a machine or a formula, our work cannot be duplicated. The logo distils this philosophy into a mark that feels alive. The accompanying poster leans into the language of science — formulas, variables, equations — and subverts it: the formula for great advertising is not reproducible, because the variables are human. We think, therefore we create differently.",image:"https://raw.githubusercontent.com/cymn-lab/photo-lab/main/Human%20Advertising%20Agency/Human%20Advertising%20Company%20Poster.png",images:[{src:"https://raw.githubusercontent.com/cymn-lab/photo-lab/main/Human%20Advertising%20Agency/Human%20Advertising%20Company%20Poster.png",caption:"Campaign Poster — ideas as living equations"},{src:"https://raw.githubusercontent.com/cymn-lab/photo-lab/main/Human%20Advertising%20Agency/Human%20Advertising%20Company%20icon.png",caption:"Logo Design (Colour)"},{src:"https://raw.githubusercontent.com/cymn-lab/photo-lab/main/Human%20Advertising%20Agency/Human%20Advertising%20Company%20icon%20B%26W.png",caption:"Logo Design (Black & White)"}],spineColor:"#3a2e1e",textColor:"#d4bc6a",width:66,height:242,font:"serif"},
       {id:14,category:"social-media",title:"Run to the Moon 2021",shortTitle:"Run to Moon",tag:"Social Media",role:"Social Media Design & Copywriting",teaser:"Three-page Instagram post inviting the WE+ community to run — and give — under the moon.",desc:"A 3-page social media post crafted for WE+ Community by SVHK, promoting their 'Run to the Moon 2021' running class in partnership with RunOurCity. The caption opens with a playful nudge — 你今日跑啱未？(Did you run right today?) — before revealing that most of us have been running wrong all along. The post then introduces 《登月起跑班》, a 4-session Thursday evening running class along the Wan Chai harbourfront, led by professional coaches covering proper form, injury prevention, and mind-body training. The deeper story: the class is a charity fundraiser — every kilometre logged counts toward the 'Run to the Moon 2021' mission, with all proceeds going to a running training programme for students with special learning needs. The design spans three pages: a cover that sets the mood, a technique breakdown page, and a closing page with all event details, pricing, and sign-up links.",image:"https://images.unsplash.com/photo-1552674605-db6ffd4facb5?q=80&w=1200&auto=format&fit=crop",pages:[{label:"Cover Page",caption:"The opening — setting the mood and the moon",url:"https://raw.githubusercontent.com/cymn-lab/photo-lab/main/RUN%20TO%20THE%20MOON%20RUNNING%20CLASS%20copy%202.pdf"},{label:"Page 2",caption:"Running posture breakdown — spot the wrong ones",url:"https://raw.githubusercontent.com/cymn-lab/photo-lab/main/RUN%20TO%20THE%20MOON%20RUNNING%20CLASS%20copy%203.pdf"},{label:"Page 3",caption:"Event details, pricing & sign-up",url:"https://raw.githubusercontent.com/cymn-lab/photo-lab/main/RUN%20TO%20THE%20MOON%20RUNNING%20CLASS%20copy%204.pdf"}],link:"https://www.instagram.com/p/CUXHzyigzb0/?img_index=2&igsh=MXJkYWliYWZzdnluZw%3D%3D%3D%3D",spineColor:"#1a3a5c",textColor:"#d4bc6a",width:54,height:230,font:"sans"},
+      {id:15,category:"branding-design",title:"Florence by Mills — Brand Show & Tell",shortTitle:"Florence Mills",tag:"School Project",role:"Brand Strategy & Presentation",teaser:"A deep-dive into Florence by Mills — decoding the brand DNA behind Millie Bobby Brown's Gen-Z beauty line.",desc:"A Brand Show & Tell presentation that unpacks Florence by Mills, the clean beauty brand co-founded by Millie Bobby Brown. The project explores how the brand speaks directly to Gen-Z through radical authenticity, skin-positive messaging, and a visual identity that feels more like a friend's bedroom than a beauty counter. The analysis covers brand positioning, tone of voice, visual language, target audience segmentation, and competitive landscape — examining how Florence by Mills carved a credible niche in an oversaturated market by leading with values over vanity.",image:"https://images.unsplash.com/photo-1596462502278-27bfdc403348?q=80&w=1200&auto=format&fit=crop",link:"https://drive.google.com/file/d/14UGtr0HHa3NeJOI0GKToWJWSQpD2UpRR/view?usp=sharing",linkLabel:"View Content ↗",spineColor:"#c4907a",textColor:"#1e1d3a",width:58,height:238,font:"serif"},
+      {id:16,category:"marketing-campaigns",title:"Uniqlo — Social Media Marketing Audit",shortTitle:"Uniqlo Audit",tag:"School Project",role:"Social Media Strategy & Audit",teaser:"A strategic audit of Uniqlo's social media presence — uncovering gaps, opportunities, and a roadmap for growth.",desc:"A comprehensive Social Media Marketing Audit examining Uniqlo's digital presence across key platforms. The project analyses content strategy, posting cadence, audience engagement, tone of voice, and competitive positioning against peers in the accessible fashion space. Drawing on platform analytics frameworks and brand benchmarking, the audit identifies where Uniqlo's social storytelling succeeds — its lifestyle-led, quietly confident visual language — and where opportunities exist to deepen community engagement and localise content for different markets. Delivered as a structured strategic report with actionable recommendations.",image:"https://images.unsplash.com/photo-1558769132-cb1aea458c5e?q=80&w=1200&auto=format&fit=crop",link:"https://drive.google.com/file/d/1ABmrMs1ZuL9nLs3ieif3Duk98kbbhtV4/view",linkLabel:"View Content ↗",spineColor:"#2e2e2e",textColor:"#FFFDD0",width:56,height:236,font:"sans"},
     ];
 
     const FILTERS = [
