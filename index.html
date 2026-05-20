@@ -3,6 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#e6e6fa">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <style>
+        /* Safe-area insets for iPhone notch / home bar */
+        @supports (padding-bottom: env(safe-area-inset-bottom)) {
+            nav.fixed { padding-bottom: max(1.25rem, env(safe-area-inset-bottom)) !important; }
+            main { padding-bottom: max(7rem, calc(6rem + env(safe-area-inset-bottom))) !important; }
+        }
+        /* Ensure tap targets are at least 44×44px on mobile */
+        @media (max-width: 767px) {
+            .nav-icon, .view-details-btn, #light-switch, .hero-cta-primary {
+                min-height: 44px;
+            }
+            .view-details-btn { min-height: 36px; }
+        }
+    </style>
     <title>Nicole Mak | My Digital Bedroom</title>
     
     <!-- Tailwind CSS -->
@@ -833,6 +849,116 @@
             transform: translateY(-2px);
             box-shadow: 0 10px 32px rgba(46,58,77,0.18), inset 0 1px 0 rgba(255,255,255,0.60);
         }
+
+        /* ══════════════════════════════════════════
+           MOBILE RESPONSIVE  (≤ 767px)
+           Desktop/laptop behaviour is fully preserved.
+        ══════════════════════════════════════════ */
+        @media (max-width: 767px) {
+
+            /* ── Global spacing ── */
+            main { padding-left: 1rem !important; padding-right: 1rem !important; padding-top: 3rem !important; }
+
+            /* ── Light switch — smaller, doesn't crowd hero ── */
+            #light-switch { top: 1rem !important; right: 1rem !important; }
+            #switch-plate { width: 2rem !important; height: 3.25rem !important; }
+            #switch-track { width: 0.85rem !important; height: 1.6rem !important; }
+
+            /* ── Bottom nav — tighter on mobile ── */
+            nav.fixed.bottom-8 { bottom: 1.25rem !important; padding-left: 1rem !important; padding-right: 1rem !important; }
+            .nav-glass { padding: 0.5rem 1.25rem !important; gap: 1rem !important; }
+            .nav-icon { width: 2.25rem !important; height: 2.25rem !important; }
+            .nav-icon svg { width: 1.1rem !important; height: 1.1rem !important; }
+
+            /* ── Hero: single column, manageable type ── */
+            #hero-header { border-radius: 18px !important; min-height: unset !important; }
+            #hero-header .lg\:grid-cols-2 { grid-template-columns: 1fr !important; }
+            #hero-header .grid { gap: 0 !important; padding: 1.75rem 1.5rem 1.5rem !important; min-height: unset !important; }
+
+            /* Left column — centred, full width */
+            #hero-header .flex.flex-col.justify-end.gap-0 {
+                width: 100% !important;
+                padding-bottom: 1.25rem !important;
+            }
+
+            /* Heading sizes — reduce to fit a 375px screen */
+            #hero-header h1:first-of-type { font-size: clamp(2.4rem, 9vw, 3.2rem) !important; }
+            #hero-header h1:last-of-type  { font-size: clamp(1.9rem, 7.5vw, 2.6rem) !important; }
+
+            /* Bio text — slightly tighter */
+            #hero-header p.font-sans { font-size: 0.88rem !important; max-width: 100% !important; }
+
+            /* Journey tags panel — hide on mobile (redundant on small screen) */
+            #hero-header .absolute.top-10 { display: none !important; }
+
+            /* Right column: hide the lamp/player row completely on mobile to avoid clutter */
+            #hero-header .relative.w-full.flex.flex-col.justify-end { display: none !important; }
+
+            /* ── About: stack window above bio ── */
+            #about .grid { grid-template-columns: 1fr !important; gap: 2rem !important; }
+            #about-window { width: 100% !important; max-width: 280px !important; height: 360px !important; }
+            #about .flex.justify-center { justify-content: center !important; }
+            #about .border-t.pt-6 { padding-top: 1rem !important; }
+
+            /* About tags — wrap freely */
+            .about-tag-row { flex-wrap: wrap !important; gap: 0.5rem !important; }
+            .about-tag-pill { font-size: 10px !important; padding: 0.35rem 0.75rem !important; }
+
+            /* ── Ideas section: 2-col polaroid grid then bookshelf ── */
+            #ideas .grid-cols-3,
+            #ideas .md\:grid-cols-3 { grid-template-columns: repeat(2, 1fr) !important; gap: 1rem !important; }
+
+            /* Project cards — compact height */
+            .project-card-container { height: 320px !important; }
+            .polaroid-back h3 { font-size: 1rem !important; }
+            .polaroid-back p  { font-size: 0.8rem !important; margin-bottom: 0.75rem !important; }
+            .view-details-btn { padding: 0.4rem 1rem !important; font-size: 9px !important; }
+
+            /* Bookshelf — horizontal scroll on mobile */
+            #bookshelf-root { overflow-x: auto !important; -webkit-overflow-scrolling: touch !important; }
+
+            /* Filter buttons — horizontal scroll strip */
+            #ideas .flex.flex-wrap { flex-wrap: nowrap !important; overflow-x: auto !important; -webkit-overflow-scrolling: touch !important; padding-bottom: 0.5rem !important; gap: 0.5rem !important; }
+            #ideas .flex.flex-wrap button,
+            #ideas .flex.flex-wrap a { flex-shrink: 0 !important; white-space: nowrap !important; font-size: 10px !important; padding: 0.35rem 0.85rem !important; }
+
+            /* ── Guestbook ── */
+            #guestbook .grid { grid-template-columns: 1fr !important; }
+            #guestbook .md\:grid-cols-2 { grid-template-columns: 1fr !important; }
+            #guestbook .lg\:grid-cols-3 { grid-template-columns: 1fr !important; }
+
+            /* ── React detail overlay modal ── */
+            /* The portal renders at fixed inset-0 — needs padding adjustment */
+            [style*="position:fixed"][style*="z-index:9999"] > div {
+                max-height: 95vh !important;
+                border-radius: 12px !important;
+                margin: 0 0.5rem !important;
+                max-width: calc(100vw - 1rem) !important;
+            }
+
+            /* ── Marquee / ticker text ── */
+            .marquee-text { font-size: 0.75rem !important; }
+
+            /* ── Section headings ── */
+            section h2.text-5xl,
+            section h2.text-4xl { font-size: 2rem !important; }
+
+            /* ── Section padding ── */
+            section.mb-32 { margin-bottom: 4rem !important; }
+            .glass-card.p-8 { padding: 1.25rem !important; }
+            .glass-card.md\:p-12 { padding: 1.25rem !important; }
+            .glass-card.lg\:p-16 { padding: 1.25rem !important; }
+
+            /* ── Footer / pb-44 main padding (leaves room for nav bar) ── */
+            main { padding-bottom: 7rem !important; }
+        }
+
+        /* ── Medium screens 768–1023px: tablet tweaks ── */
+        @media (min-width: 768px) and (max-width: 1023px) {
+            #hero-header .absolute.top-10 { max-width: 220px !important; }
+            .project-card-container { height: 350px !important; }
+            #about-window { width: 300px !important; height: 400px !important; }
+        }
     </style>
 <body class="font-sans antialiased relative min-h-screen overflow-x-hidden flex flex-col items-center">
 
@@ -1645,33 +1771,6 @@
                         </div>
                     </div>
 
-                    <!-- Card 10: WE+ Community SVHK -->
-                    <div class="project-card-container h-[380px] cursor-pointer" data-category="social-media">
-                        <div class="polaroid-inner">
-                            <div class="polaroid-face flex flex-col">
-                                <div class="washi-tape" style="transform: translateX(-50%) rotate(3deg); background-color: rgba(252,235,235,0.8);"></div>
-                                <div class="polaroid-img-placeholder flex-grow">
-                                    <img src="./assets/we-plus-1.webp" class="w-full h-full object-cover" alt="WE+ Community" loading="lazy" decoding="async">
-                                </div>
-                                <div class="mt-4 text-center font-mono text-sm font-bold text-navy">WE+ Community SVHK</div>
-                            </div>
-                            <div class="polaroid-back">
-                                <h3 class="font-bold text-xl mb-3 text-navy">WE+ Community SVHK</h3>
-                                <p class="text-sm mb-6 text-navy/80 font-serif italic">An invitation to run toward wellness and shared dreams under the glow of collective achievement.</p>
-                                <button class="view-details-btn bg-navy text-butter px-6 py-2 rounded-full text-xs font-mono uppercase tracking-widest hover:opacity-80 transition-opacity"
-                                    data-title="WE+ Community SVHK Social Media Post"
-                                    data-image="./assets/we-plus-1.webp"
-                                    data-image-secondary="./assets/we-plus-2.webp"
-                                    data-image-tertiary="./assets/we-plus-3.webp"
-                                    data-desc="For the WE+ Community by SVHK, we crafted a social media post that wasn't just an announcement, but an invitation to a shared dream: the 'Run to the Moon 2021' running class. It spoke to the quiet strength within, encouraging each member to lace up their shoes and join a collective stride towards wellness and camaraderie. The campaign aimed to light up their paths, fostering a sense of belonging and achievement as they ran, not just for distance, but for the joy of movement and the warmth of community."
-                                    data-role="Social Media & Copywriting"
-                                    data-tag="Social Media"
-                                    data-link="https://www.instagram.com/p/CUXHzyigzb0/?img_index=2&igsh=MXJkYWliYWZzdnluZw%3D%3D%3D%3D">
-                                    View Details
-                                </button>
-                            </div>
-                        </div>
-                    </div>
 
                     <!-- Card 11: Breakup Tours OOH Campaign -->
                     <div class="project-card-container h-[380px] cursor-pointer" data-category="marketing-campaigns">
@@ -2288,7 +2387,6 @@
       {id:7,category:"marketing-campaigns",title:"AGO Digital Marketing Plan",shortTitle:"AGO Digital",tag:"School Project",role:"Digital Marketing Strategy",teaser:"'Discover a Palette of Peace' — digital strategy for the Art Gallery of Ontario.",desc:"Campaign: 'Discover a Palette of Peace at AGO'. Objectives: 15% increase in conversion rate from free to paid passholders + 20% increase in email open rates. Target: Health-conscious, educated 25-27 year-olds in Greater Toronto Area. Tactics: Video ads, influencer partnerships, paid social advertising, and OOH digital programmatic.",image:"https://images.unsplash.com/photo-1561070791-2526d30994b5?q=80&w=1200&auto=format&fit=crop",link:"https://drive.google.com/file/d/1xe6yAqHipMCkcTYxX5OFK30GupWxUYAd/view?usp=sharing",spineColor:"#2a2850",textColor:"#d4bc6a",width:68,height:248,font:"serif"},
       {id:8,category:"social-media",title:"BowCoffee Labor Day Post",shortTitle:"BowCoffee",tag:"School Project",role:"Social Media Design & Copywriting",teaser:"Ice drip coffee post — a slow, meditative Labor Day ritual captured for Bow Coffee HK.",desc:"An exclusive Labor Day social media post designed for Bow Coffee, a specialty coffee shop in Hong Kong. The post promotes their signature ice drip coffee — a slow, methodical brew that mirrors the pace of a well-earned day off. The visual design and caption work together to frame Labor Day not just as a holiday, but as an invitation to slow down, savour the process, and enjoy something crafted with patience. The caption, written in Traditional Chinese, draws a parallel between the unhurried drip of ice coffee and the rare gift of unscheduled time — making it feel personal and seasonal, not merely promotional.",image:"https://raw.githubusercontent.com/cymn-lab/photo-lab/main/Archive/BowCoffee%20Post%20design.png",images:[{src:"https://raw.githubusercontent.com/cymn-lab/photo-lab/main/Archive/BowCoffee%20Post%20design.png",caption:"Post Design — Labor Day ice drip coffee promotion"},{src:"https://raw.githubusercontent.com/cymn-lab/photo-lab/main/Archive/BowCoffee%20Post%20Caption.png",caption:"Caption Design — Traditional Chinese copy for the post"}],spineColor:"#c4a882",textColor:"#1e1d3a",width:52,height:226,font:"sans"},
       {id:9,category:"marketing-campaigns",title:"50AddOil Online Rummikub Workshop",shortTitle:"50AddOil",tag:"School Project",role:"Campaign Strategy",teaser:"Pandemic-era digital sanctuary — Rummikub for the young-at-heart 50+ community.",desc:"In the quiet moments of the pandemic, the '50AddOil Online Rummikub Workshop' blossomed as a sanctuary for our vibrant 50+ community. We introduced Rummikub, a game both intriguing and intellectually stimulating, offering a delightful way to gather with friends safely from home.",image:"https://images.unsplash.com/photo-1516975080664-ed2fc6a32937?q=80&w=1200&auto=format&fit=crop",spineColor:"#7a7aaa",textColor:"#e8e0ff",width:58,height:232,font:"serif"},
-      {id:10,category:"social-media",title:"WE+ Community SVHK",shortTitle:"WE+ SVHK",tag:"Social Media",role:"Social Media & Copywriting",teaser:"An invitation to run toward wellness and shared dreams under the moon.",desc:"For the WE+ Community by SVHK, we crafted a social media post that wasn't just an announcement, but an invitation to a shared dream: the 'Run to the Moon 2021' running class. It spoke to the quiet strength within, encouraging each member to join a collective stride towards wellness.",image:"https://images.unsplash.com/photo-1552674605-db6ffd4facb5?q=80&w=1200&auto=format&fit=crop",link:"https://www.instagram.com/p/CUXHzyigzb0/?img_index=2&igsh=MXJkYWliYWZzdnluZw%3D%3D%3D%3D",spineColor:"#c4907a",textColor:"#1e1d3a",width:48,height:224,font:"sans"},
       {id:11,category:"marketing-campaigns",title:"Breakup Tours OOH Campaign",shortTitle:"Breakup Tours",tag:"School Project",role:"Poster Design & Campaign Strategy",teaser:"Poignant OOH posters — a gentle nudge to reclaim your inner child.",desc:"Designed to promote 'Breakup with Myself' — a new tour by Breakup Tours — this five-poster OOH series carries a quiet, tender thesis: we forget how childlike and optimistic we once were. Each poster depicts the same individual at a different stage of life, youngest to oldest, tracing the arc from open-hearted wonder to the weight of adulthood. The shifting facial expressions and appearances are the campaign's core visual language. Backgrounds are layered with Chinese lyrics from Endy Chow's 'Children Song' — a song about growth and the courage to embrace your inner child — so the words themselves become atmosphere. The invitation: break up with who you've become, and find your way back to yourself.",image:"https://raw.githubusercontent.com/cymn-lab/photo-lab/main/Breakup%20Tours%20Poster/Breakup%20Tours%20Poster%201.png",images:[{src:"https://raw.githubusercontent.com/cymn-lab/photo-lab/main/Breakup%20Tours%20Poster/Breakup%20Tours%20Poster%201.png",caption:"Poster 1 — Youngest · the untouched beginning"},{src:"https://raw.githubusercontent.com/cymn-lab/photo-lab/main/Breakup%20Tours%20Poster/Breakup%20Tours%20Poster%202.png",caption:"Poster 2 — Early childhood · curiosity still whole"},{src:"https://raw.githubusercontent.com/cymn-lab/photo-lab/main/Breakup%20Tours%20Poster/Breakup%20Tours%20Poster%203.png",caption:"Poster 3 — Adolescence · the self starts to guard itself"},{src:"https://raw.githubusercontent.com/cymn-lab/photo-lab/main/Breakup%20Tours%20Poster/Breakup%20Tours%20Poster%204.png",caption:"Poster 4 — Young adult · layers accumulated"},{src:"https://raw.githubusercontent.com/cymn-lab/photo-lab/main/Breakup%20Tours%20Poster/Breakup%20Tours%20Poster%205.png",caption:"Poster 5 — Adult · the one who needs to break up with themselves"}],spineColor:"#d4bc6a",textColor:"#1e1d3a",width:64,height:240,font:"serif"},
       {id:12,category:"marketing-campaigns",title:"Hakuna Matata: HK Disneyland",shortTitle:"Hakuna Matata",tag:"Marketing Campaign",role:"Internal Communications",teaser:"Rekindling Cast Member well-being at HK Disneyland through a 3-phase strategy.",desc:"Behind the enchanting gates of Hong Kong Disneyland, a quiet magic needed rekindling. The 'Hakuna Matata' initiative was a strategic internal communications proposal crafted to revitalize the spirit of frontline Cast Members through a three-phased approach of self-care tools, cross-training programs, and appreciation events.",image:"https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=1200&auto=format&fit=crop",link:"https://drive.google.com/file/d/1_-ypF7SzLsPS2yi6esXJkliuROYUIQpw/view?usp=sharing",linkLabel:"View Project Proposal ↗",spineColor:"#2a2850",textColor:"#d4bc6a",width:70,height:244,font:"serif"},
       {id:13,category:"branding-design",title:"Human Advertising Agency",shortTitle:"Human Agency",tag:"Branding & Identity",role:"Logo Design & Poster Design",teaser:"Ideas born from emotion, not algorithm — a brand identity for a firm that thinks as humans do.",desc:"As the assumed founder of Human Advertising Agency, I built an identity around a single conviction: every idea we produce carries the fingerprint of a real human thought — imperfect, emotional, and unrepeatable. Unlike outputs from a machine or a formula, our work cannot be duplicated. The logo distils this philosophy into a mark that feels alive. The accompanying poster leans into the language of science — formulas, variables, equations — and subverts it: the formula for great advertising is not reproducible, because the variables are human. We think, therefore we create differently.",image:"https://raw.githubusercontent.com/cymn-lab/photo-lab/main/Human%20Advertising%20Agency/Human%20Advertising%20Company%20Poster.png",images:[{src:"https://raw.githubusercontent.com/cymn-lab/photo-lab/main/Human%20Advertising%20Agency/Human%20Advertising%20Company%20Poster.png",caption:"Campaign Poster — ideas as living equations"},{src:"https://raw.githubusercontent.com/cymn-lab/photo-lab/main/Human%20Advertising%20Agency/Human%20Advertising%20Company%20icon.png",caption:"Logo Design (Colour)"},{src:"https://raw.githubusercontent.com/cymn-lab/photo-lab/main/Human%20Advertising%20Agency/Human%20Advertising%20Company%20icon%20B%26W.png",caption:"Logo Design (Black & White)"}],spineColor:"#3a2e1e",textColor:"#d4bc6a",width:66,height:242,font:"serif"},
