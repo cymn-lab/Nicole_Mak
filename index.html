@@ -558,6 +558,13 @@
             .motion-line-inner { transition: none !important; opacity: 1 !important; transform: none !important; filter: none !important; }
         }
 
+        /* ── Mobile: simplify all variants to fade-up only ── */
+        @media (max-width: 767px) {
+            [data-motion]         { transform: translateY(20px) !important; filter: none !important; }
+            [data-stagger] > *    { transform: translateY(16px) !important; }
+            [data-delay]          { transition-delay: 0s !important; }
+        }
+
         /* ── Nav Active Indicator ── */
         .nav-icon.active-nav {
             background: #2E3A4D;
@@ -1622,7 +1629,7 @@
         </section>
 
         <!-- ── LATE-NIGHT IDEAS (Projects) ── -->
-        <section id="ideas" class="mb-32 pt-8 reveal" data-nav-section="ideas" data-motion="fade-up">
+        <section id="ideas" class="mb-32 pt-8 reveal" data-nav-section="ideas">
             <div id="bookshelf-root" style="overflow: visible; position: relative; z-index: 10;"></div>
             <!-- legacy moodboard-grid kept empty so existing JS filter/overlay wiring doesn't break -->
             <div style="display:none"><div class="grid" id="moodboard-grid">
@@ -2365,6 +2372,10 @@
         // 1. data-motion variants  2. data-stagger  3. legacy .reveal
         // 4. scroll-progress parallax  5. section heading counter
 
+        // Lower threshold on mobile so elements trigger sooner
+        const isMobile = window.innerWidth < 768;
+        const motionThreshold = isMobile ? 0.01 : 0.10;
+
         // Unified IntersectionObserver — handles all motion targets
         const motionObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
@@ -2373,12 +2384,22 @@
                 el.classList.add('is-visible', 'visible'); // covers both systems
                 motionObserver.unobserve(el);
             });
-        }, { threshold: 0.10, rootMargin: '0px 0px -40px 0px' });
+        }, { threshold: motionThreshold, rootMargin: '0px 0px -20px 0px' });
 
         // Observe all motion targets
         document.querySelectorAll(
             '.reveal, [data-motion], [data-stagger]'
         ).forEach(el => motionObserver.observe(el));
+
+        // Safety fallback — force all motion elements visible after 2.5s
+        // Prevents any element getting permanently stuck invisible
+        setTimeout(function() {
+            document.querySelectorAll(
+                '.reveal:not(.visible), [data-motion]:not(.is-visible), [data-stagger]:not(.is-visible)'
+            ).forEach(function(el) {
+                el.classList.add('is-visible', 'visible');
+            });
+        }, 2500);
 
         // ── Scroll-progress parallax (rAF throttled) ──────────────────
         // Elements with data-parallax get a gentle vertical drift.
