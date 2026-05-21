@@ -366,13 +366,36 @@
         .validation-tooltip.show { opacity: 1; transform: translateY(0); }
         .book-input.has-error { border-bottom-color: #D9534F !important; color: #D9534F; }
 
-        /* ── Custom Cursors ── */
-        * { cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32'><text y='24' font-size='24'>🐝</text></svg>") 12 12, auto !important; }
-        a, button, input, textarea, .cursor-crosshair, a *, button *, .project-card-container {
+        /* ── Custom Cursors ──
+           Light mode : 🐝 default, 🍯 interactive
+           Dark mode  : 🧚 default, ✨ interactive
+           html + body need explicit rules — * only covers descendants */
+        html:not(.lights-off),
+        body:not(.lights-off),
+        body:not(.lights-off) * {
+            cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32'><text y='24' font-size='24'>🐝</text></svg>") 12 12, auto !important;
+        }
+        body:not(.lights-off) a, body:not(.lights-off) a *,
+        body:not(.lights-off) button, body:not(.lights-off) button *,
+        body:not(.lights-off) input, body:not(.lights-off) textarea,
+        body:not(.lights-off) .cursor-crosshair,
+        body:not(.lights-off) [class*="cursor-pointer"],
+        body:not(.lights-off) .project-card-container,
+        body:not(.lights-off) .project-card-container * {
             cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32'><text y='24' font-size='24'>🍯</text></svg>") 12 12, pointer !important;
         }
-        body.lights-off * { cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32'><text y='24' font-size='24'>🧚</text></svg>") 12 12, auto !important; }
-        body.lights-off a, body.lights-off button, body.lights-off input, body.lights-off textarea, body.lights-off .cursor-crosshair, body.lights-off a *, body.lights-off button *, body.lights-off .project-card-container {
+        html.lights-off,
+        body.lights-off,
+        body.lights-off *, body.lights-off *::before, body.lights-off *::after {
+            cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32'><text y='24' font-size='24'>🧚</text></svg>") 12 12, auto !important;
+        }
+        body.lights-off a, body.lights-off a *,
+        body.lights-off button, body.lights-off button *,
+        body.lights-off input, body.lights-off textarea,
+        body.lights-off [class*="cursor-pointer"],
+        body.lights-off .cursor-crosshair,
+        body.lights-off .project-card-container,
+        body.lights-off .project-card-container * {
             cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32'><text y='24' font-size='24'>✨</text></svg>") 12 12, pointer !important;
         }
 
@@ -565,6 +588,10 @@
             [data-delay]          { transition-delay: 0s !important; }
         }
 
+        /* ── Name card flip widget (used in DetailOverlay) ── */
+        .name-card-flipper { transform-style: preserve-3d; }
+        *:hover > .name-card-flipper { transform: rotateY(180deg); }
+
         /* ── Nav Active Indicator ── */
         .nav-icon.active-nav {
             background: #2E3A4D;
@@ -694,7 +721,7 @@
             grid-template-rows: 1fr;
             grid-template-columns: 1fr;
             vertical-align: bottom;
-            cursor: default;
+            cursor: inherit !important;
             position: relative;
             /* Only clip top/bottom; extend far left/right so no word is cut */
             overflow: hidden;
@@ -741,7 +768,7 @@
         .about-shimmer {
             position: relative;
             display: inline;
-            cursor: default;
+            cursor: inherit !important;
         }
         .about-shimmer::after {
             content: '';
@@ -1640,7 +1667,7 @@
                             <div class="polaroid-face flex flex-col">
                                 <div class="washi-tape" style="background-color: rgba(230,230,250,0.7);"></div>
                                 <div class="polaroid-img-placeholder flex-grow">
-                                    <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=800&auto=format&fit=crop" class="w-full h-full object-cover" alt="@fibu.draw" loading="lazy" decoding="async">
+                                    <img src="https://raw.githubusercontent.com/cymn-lab/photo-lab/main/Fibu%20draw%20motions/Fibu%20draw%20motion%201.gif" class="w-full h-full object-contain" alt="@fibu.draw" loading="lazy" decoding="async">
                                 </div>
                                 <div class="mt-4 text-center font-mono text-sm font-bold text-navy">@fibu.draw</div>
                             </div>
@@ -1715,20 +1742,20 @@
                     <div class="project-card-container h-[380px] cursor-pointer" data-category="branding-design">
                         <div class="polaroid-inner">
                             <div class="polaroid-face flex flex-col">
-                                <div class="washi-tape" style="transform: translateX(-50%) rotate(4deg); background-color: rgba(200,220,255,0.7);"></div>
-                                <div class="polaroid-img-placeholder flex-grow p-6 bg-[#fcfcfc] flex items-center justify-center border border-navy/5">
-                                    <p class="font-serif italic text-xl text-center leading-relaxed text-navy">Creative identity expressed through design</p>
+                                <div class="washi-tape" style="transform: translateX(-50%) rotate(4deg); background-color: rgba(212,188,106,0.65);"></div>
+                                <div class="polaroid-img-placeholder flex-grow" style="background:#f8f6ee;">
+                                    <img src="https://raw.githubusercontent.com/cymn-lab/photo-lab/main/Name%20card%20design/Name%20card%20design_front.PNG" class="w-full h-full object-contain p-2" alt="Name Card Design front" loading="lazy" decoding="async">
                                 </div>
-                                <div class="mt-4 text-center font-mono text-sm font-bold text-navy">Name Card Design</div>
+                                <div class="mt-4 text-center font-mono text-sm font-bold text-navy">Personal Name Card Design</div>
                             </div>
                             <div class="polaroid-back">
-                                <h3 class="font-bold text-xl mb-3 text-navy">Name Card Design</h3>
-                                <p class="text-sm mb-6 text-navy/80 font-serif italic">Personal branding through distinctive name card design.</p>
+                                <h3 class="font-bold text-xl mb-3 text-navy">Personal Name Card Design</h3>
+                                <p class="text-sm mb-6 text-navy/80 font-serif italic">Two sides of one identity — hover to flip inside the detail view.</p>
                                 <button class="view-details-btn bg-navy text-butter px-6 py-2 rounded-full text-xs font-mono uppercase tracking-widest hover:opacity-80 transition-opacity"
-                                    data-title="Name Card Design"
-                                    data-image="https://images.unsplash.com/photo-1455390582262-044cdead27d8?q=80&w=1200&auto=format&fit=crop"
-                                    data-desc="In this school project, I blended my distinct personalities into a cohesive name card aesthetic. The goal was for recipients to immediately recognize me as a creative individual with a free-flowing, unconventional approach to thinking and design. Every element was carefully chosen to reflect my creative philosophy."
-                                    data-role="Graphic Design"
+                                    data-title="Personal Name Card Design"
+                                    data-image="https://raw.githubusercontent.com/cymn-lab/photo-lab/main/Name%20card%20design/Name%20card%20design_front.PNG"
+                                    data-desc="A personal name card designed as a school project — built with the conviction that a name card is never just contact information; it is the first sentence of your creative identity. Every decision was made to ensure that whoever receives this card understands something true about me before I have finished introducing myself. Some personal information on the back has been redacted for privacy."
+                                    data-role="Graphic Design & Personal Branding"
                                     data-tag="School Project">
                                     View Details
                                 </button>
@@ -2062,6 +2089,7 @@
         // ── Light Toggle ──────────────────────────────────────────────
         function toggleLights() {
             document.body.classList.toggle('lights-off');
+            document.documentElement.classList.toggle('lights-off');
             if (document.body.classList.contains('lights-off')) {
                 createMoonDust(window.innerWidth - 100, 100);
             }
@@ -2575,11 +2603,38 @@
             });
         });
 
-    </script>
+        // ── GIF hover loop (delegated — works on static + React-rendered imgs) ──
+        // A single mouseenter/mouseleave on document catches every <img src="*.gif">
+        // regardless of when it was created, including React carousel remounts.
+        (function() {
+            var _timers = new WeakMap(); // per-element interval, keyed by img node
 
-    <!-- ══════════════════════════════════════════
-         BOOKSHELF — self-contained React island
-    ══════════════════════════════════════════ -->
+            document.addEventListener('mouseenter', function(e) {
+                var img = e.target;
+                if (!(img instanceof HTMLImageElement)) return;
+                var src = img.getAttribute('src') || '';
+                if (!src.match(/\.gif/i)) return;
+
+                var base = src.split('?')[0];
+
+                function restart() {
+                    if (img.isConnected) img.src = base + '?h=' + Date.now();
+                }
+
+                restart(); // immediate restart on hover
+                var timer = setInterval(restart, 2400);
+                _timers.set(img, timer);
+            }, true); // capture phase so it fires before React synthetic events
+
+            document.addEventListener('mouseleave', function(e) {
+                var img = e.target;
+                if (!(img instanceof HTMLImageElement)) return;
+                var timer = _timers.get(img);
+                if (timer) { clearInterval(timer); _timers.delete(img); }
+            }, true);
+        })();
+
+    </script>
     <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
     <script>
@@ -2591,10 +2646,10 @@
 
     /* ── Projects ── */
     const PROJECTS = [
-      {id:1,category:"illustrations",title:"@fibu.draw",shortTitle:"@fibu.draw",tag:"Personal Brand",role:"Illustration",teaser:"Minimalist characters exploring healing & happiness through Procreate.",desc:"My personal illustration brand features cute, minimalist characters (cats, dogs) exploring themes of healing and happiness. Created with Procreate, each piece captures the warmth of daily moments. The collection includes both line art and colored versions, with a growing community on Instagram.",image:"https://raw.githubusercontent.com/cymn-lab/photo-lab/main/Fibu.draw_Gif/IMG_0056.GIF",images:[{src:"https://raw.githubusercontent.com/cymn-lab/photo-lab/main/Fibu.draw_Gif/IMG_0056.GIF",caption:"healing in small things 🐱"},{src:"https://raw.githubusercontent.com/cymn-lab/photo-lab/main/Fibu.draw_Gif/IMG_0068.GIF",caption:"warmth of daily moments 🌿"},{src:"https://raw.githubusercontent.com/cymn-lab/photo-lab/main/Fibu.draw_Gif/IMG_0080.GIF",caption:"softness, always 🌸"},{src:"https://raw.githubusercontent.com/cymn-lab/photo-lab/main/Fibu.draw_Gif/IMG_0088.GIF",caption:"tiny joys 🐶"},{src:"https://raw.githubusercontent.com/cymn-lab/photo-lab/main/Fibu.draw_Gif/IMG_0099.GIF",caption:"line art & colour 🎨"},{src:"https://raw.githubusercontent.com/cymn-lab/photo-lab/main/Fibu.draw_Gif/IMG_0151.GIF",caption:"finding the light ✨"},{src:"https://raw.githubusercontent.com/cymn-lab/photo-lab/main/Fibu.draw_Gif/IMG_0184.GIF",caption:"made with love, in Procreate 🍊"}],carousel:true,link:"https://www.instagram.com/fibu.draw?igsh=czBnbjQ4dW1ldWZk&utm_source=qr",spineColor:"#8b7fb5",textColor:"#1e1d3a",width:46,height:228,font:"serif"},
+      {id:1,category:"illustrations",title:"@fibu.draw",shortTitle:"@fibu.draw",tag:"Personal Brand",role:"Illustration",teaser:"Minimalist characters exploring healing & happiness through Procreate.",desc:"My personal illustration brand features cute, minimalist characters (cats, dogs) exploring themes of healing and happiness. Created with Procreate, each piece captures the warmth of daily moments. The collection includes both line art and colored versions, with a growing community on Instagram.",image:"https://raw.githubusercontent.com/cymn-lab/photo-lab/main/Fibu%20draw%20motions/Fibu%20draw%20motion%201.gif",images:[{src:"https://raw.githubusercontent.com/cymn-lab/photo-lab/main/Fibu%20draw%20motions/Fibu%20draw%20motion%201.gif",caption:"healing in small things 🐱"},{src:"https://raw.githubusercontent.com/cymn-lab/photo-lab/main/Fibu%20draw%20motions/Fibu%20draw%20motion%203.gif",caption:"warmth of daily moments 🌿"},{src:"https://raw.githubusercontent.com/cymn-lab/photo-lab/main/Fibu%20draw%20motions/Fibu%20draw%20motion%204.gif",caption:"softness, always 🌸"},{src:"https://raw.githubusercontent.com/cymn-lab/photo-lab/main/Fibu%20draw%20motions/Fibu%20draw%20motion%205.gif",caption:"tiny joys 🐶"},{src:"https://raw.githubusercontent.com/cymn-lab/photo-lab/main/Fibu%20draw%20motions/Fibu%20draw%20motion%206.gif",caption:"made with love, in Procreate 🍊"}],carousel:true,link:"https://www.instagram.com/fibu.draw?igsh=czBnbjQ4dW1ldWZk&utm_source=qr",spineColor:"#8b7fb5",textColor:"#1e1d3a",width:46,height:228,font:"serif"},
       {id:2,category:"social-media",title:"City Gallery Campaign",shortTitle:"City Gallery",tag:"Internship",role:"Social Media Copywriting & Design",teaser:"25th Anniversary HKSAR campaign — crafting stories for a cultural institution in Traditional Chinese.",desc:"During my internship at City Gallery — a government-run public gallery in Central, Hong Kong — I contributed to a series of social media posts celebrating the 25th Anniversary of the Hong Kong Special Administrative Region. My role spanned both copywriting and visual content: writing captions in Traditional Chinese to reflect the bilingual cultural identity of the gallery and its audience, and participating in the design of post visuals for Instagram and Facebook. The content ranged from exhibition highlights and heritage storytelling to event promotions and short-form video posts, each crafted to deepen community connection with the gallery's programming and the significance of the anniversary milestone.",image:"https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?q=80&w=1200&auto=format&fit=crop",posts:[{label:"Post 1 — Photo Post",url:"https://www.instagram.com/p/ChZQ78BAvmo/?igsh=bGtvcmZrcGh2bGNp"},{label:"Post 2 — Video (IGTV)",url:"https://www.instagram.com/tv/CgRStZAJegC/?igsh=MW82anpmejRoYTQ2cA=="},{label:"Post 3 — Video (IGTV)",url:"https://www.instagram.com/tv/Cgs3XfJFoQR/?igsh=ZmJ5Y3NvZGx6bjVv"},{label:"Post 4 — Photo Post",url:"https://www.instagram.com/p/ChmXSs8lRo3/?igsh=MWdwMjJvMjYydnkzdg=="},{label:"Post 5 — Photo Post",url:"https://www.instagram.com/p/CiRcT_xvMxB/?igsh=M2hnbjIzZjZ3d2o4"}],spineColor:"#c4907a",textColor:"#1e1d3a",width:62,height:234,font:"sans"},
       {id:3,category:"social-media",title:"Lions Share HK Campaign",shortTitle:"Lions Share",tag:"Work Project",role:"Social Media Design & Copywriting",teaser:"Social media content for @lions.share_hk — financial literacy posts that make money make sense.",desc:"A content creation project for @lions.share_hk, a Prudential Insurance initiative built to recruit and nurture fresh graduates entering the financial industry in Hong Kong. Working on the social media presence, I designed visual posts and wrote the captions for Instagram — crafting content around financial management topics to attract and educate a young audience. The goal was to make finance feel approachable and aspirational, not intimidating: speaking directly to graduates figuring out their first steps into the industry with clear, engaging, and visually consistent content.",image:"https://raw.githubusercontent.com/cymn-lab/photo-lab/main/Lion's%20Share%20Post%20designs/140ED17B-2F5F-46B7-B377-E85197DFD8FF.JPG",images:[{src:"https://raw.githubusercontent.com/cymn-lab/photo-lab/main/Lion's%20Share%20Post%20designs/140ED17B-2F5F-46B7-B377-E85197DFD8FF.JPG",caption:"Financial management content — making money make sense"},{src:"https://raw.githubusercontent.com/cymn-lab/photo-lab/main/Lion's%20Share%20Post%20designs/Screenshot%202022-09-12%20at%207.23.18%20PM.PNG",caption:"Instagram post — financial literacy for fresh graduates"},{src:"https://raw.githubusercontent.com/cymn-lab/photo-lab/main/Lion's%20Share%20Post%20designs/Screenshot%202022-09-25%20at%207.01.53%20PM.PNG",caption:"Campaign visual — aspirational yet grounded"},{src:"https://raw.githubusercontent.com/cymn-lab/photo-lab/main/Lion's%20Share%20Post%20designs/Screenshot%202022-09-30%20at%201.17.43%20PM.PNG",caption:"Post design — consistent voice across the feed"},{src:"https://raw.githubusercontent.com/cymn-lab/photo-lab/main/Lion's%20Share%20Post%20designs/c19f7d67-1b7f-40ae-a787-e60e2c077037.JPG",caption:"Engagement content — attracting the right audience"}],carousel:true,autoplay:true,link:"https://www.instagram.com/lions.share_hk?igsh=MXJpMGhxa3BmM3VxNQ%3D%3D&utm_source=qr",spineColor:"#2a2850",textColor:"#d4bc6a",width:50,height:220,font:"serif"},
-      {id:4,category:"branding-design",title:"Name Card Design",shortTitle:"Name Card",tag:"School Project",role:"Graphic Design",teaser:"A name card that instantly reads as creative, free-flowing, unconventional.",desc:"In this school project, I blended my distinct personalities into a cohesive name card aesthetic. The goal was for recipients to immediately recognize me as a creative individual with a free-flowing, unconventional approach to thinking and design.",image:"https://images.unsplash.com/photo-1455390582262-044cdead27d8?q=80&w=1200&auto=format&fit=crop",spineColor:"#d4bc6a",textColor:"#1e1d3a",width:56,height:242,font:"sans"},
+      {id:4,category:"branding-design",title:"Personal Name Card Design",shortTitle:"Name Card",tag:"School Project",role:"Graphic Design & Personal Branding",teaser:"Two sides of one identity — a name card that tells the full story before a word is spoken.",desc:"A personal name card designed as a school project — but built with the conviction that a name card is never just contact information; it is the first sentence of your creative identity. The front face leads with visual personality: typographic choices, colour, and layout that immediately signal how I think about design. The back holds the practical details, with some personal information redacted for privacy. Every decision — the typeface weight, the spatial rhythm, the way the two sides speak to each other — was made to ensure that whoever receives this card understands something true about me before I have finished introducing myself.",image:"https://raw.githubusercontent.com/cymn-lab/photo-lab/main/Name%20card%20design/Name%20card%20design_front.PNG",flipCard:true,frontImage:"https://raw.githubusercontent.com/cymn-lab/photo-lab/main/Name%20card%20design/Name%20card%20design_front.PNG",backImage:"https://raw.githubusercontent.com/cymn-lab/photo-lab/main/Name%20card%20design/Name%20card%20design_back.PNG",spineColor:"#d4bc6a",textColor:"#1e1d3a",width:56,height:242,font:"sans"},
       {id:5,category:"branding-design",title:"Freedom of Speech Logo",shortTitle:"Free Speech",tag:"School Project",role:"Logo Design",teaser:"A brain-as-speech-bubble mark — where every thought finds its own pathway out.",desc:"A logo design built around a single conviction: no two people think alike, and expression should never be forced into a single shape. The mark fuses a brain with a speech bubble — the brain rendered as a landscape of branching map-like pathways, each route representing a different way a thought can travel before it becomes a word, an image, or an idea shared with the world. There is no straight line from thought to expression; there are only the winding, personal routes each individual takes. The logo exists in both colour and black-and-white, each version carrying the same philosophy — freedom of speech is not about volume, it is about the right to find your own path.",image:"https://raw.githubusercontent.com/cymn-lab/photo-lab/main/Freedom%20of%20speech%20logo.png",images:[{src:"https://raw.githubusercontent.com/cymn-lab/photo-lab/main/Freedom%20of%20speech%20logo.png",caption:"Logo Design — colour version"},{src:"https://raw.githubusercontent.com/cymn-lab/photo-lab/main/Freedom%20of%20speech%20logo%20B%26W%202.png",caption:"Logo Design — black & white, version 1"},{src:"https://raw.githubusercontent.com/cymn-lab/photo-lab/main/Freedom%20of%20speech%20logo%20B%26W%201.png",caption:"Logo Design — black & white, version 2"}],spineColor:"#a09dc0",textColor:"#1e1d3a",width:44,height:218,font:"serif"},
       {id:6,category:"illustrations",title:"HKETO Toronto Collaboration",shortTitle:"HKETO Collab",tag:"Collaboration",role:"Illustration & Cultural Storytelling",teaser:"CNY promotional video for the Hong Kong Economic and Trade Office in Toronto — bringing @fibu.draw characters to life for the diaspora.",desc:"A collaboration with the Hong Kong Economic and Trade Office (HKETO) in Toronto, where my @fibu.draw illustrations were selected to feature in a festive Chinese New Year promotional video. The video was created to celebrate the Lunar New Year with the Hong Kong diaspora community across Canada, using the warmth and softness of my minimalist character style to carry a message of togetherness and cultural pride across the distance. Seeing the characters — originally drawn as a personal creative practice — brought into an official government cultural outreach piece was a meaningful moment: proof that small, personal things can travel far.",image:"https://raw.githubusercontent.com/cymn-lab/photo-lab/main/Fibu.draw_Me_HKETO.JPG",images:[{src:"https://raw.githubusercontent.com/cymn-lab/photo-lab/main/Fibu.draw_Me_HKETO.JPG",caption:"Nicole with the HKETO Toronto collaboration feature 🌸"}],link:"https://drive.google.com/file/d/1yJZHEqUFnDqq00yBI2g6N-Keqr4bADyc/view",linkLabel:"Watch the Video ↗",spineColor:"#b5907a",textColor:"#1e1d3a",width:60,height:238,font:"sans"},
       {id:7,category:"marketing-campaigns",title:"AGO Digital Marketing Plan",shortTitle:"AGO Digital",tag:"School Project",role:"Digital Marketing Strategy",teaser:"'Discover a Palette of Peace' — digital strategy for the Art Gallery of Ontario.",desc:"Campaign: 'Discover a Palette of Peace at AGO'. Objectives: 15% increase in conversion rate from free to paid passholders + 20% increase in email open rates. Target: Health-conscious, educated 25-27 year-olds in Greater Toronto Area. Tactics: Video ads, influencer partnerships, paid social advertising, and OOH digital programmatic.",image:"https://images.unsplash.com/photo-1561070791-2526d30994b5?q=80&w=1200&auto=format&fit=crop",link:"https://drive.google.com/file/d/1xe6yAqHipMCkcTYxX5OFK30GupWxUYAd/view?usp=sharing",spineColor:"#2a2850",textColor:"#d4bc6a",width:68,height:248,font:"serif"},
@@ -2782,11 +2837,35 @@
       if(!project) return null;
 
       const [activeImg, setActiveImg] = React.useState(0);
+      const [cardFlipped, setCardFlipped] = React.useState(false);
+      const gifImgRef = React.useRef(null);
+      const gifTimerRef = React.useRef(null);
+      const [gifTick, setGifTick] = React.useState(0);
       const hasGallery  = project.images && project.images.length > 1;
       const isCarousel  = project.carousel && hasGallery;
+      const isFlipCard  = project.flipCard && project.frontImage && project.backImage;
       const hasPages    = project.pages  && project.pages.length > 0;
       const hasPosts    = project.posts  && project.posts.length > 0;
       const total       = hasGallery ? project.images.length : 1;
+      const isGifCarousel = isCarousel && project.images[0] && project.images[0].src.toLowerCase().includes('.gif');
+
+      /* Reset on project change */
+      React.useEffect(function(){ setCardFlipped(false); setActiveImg(0); setGifTick(0); }, [project.id]);
+
+      /* GIF loop — increment gifTick every 2.5s to force a new key on <img>,
+         which makes React unmount/remount the element and restart the GIF from frame 1.
+         No DOM mutation — purely through React state. */
+      React.useEffect(function(){
+        if(!isGifCarousel) return;
+        setGifTick(0); // reset tick when switching GIFs
+        if(gifTimerRef.current) clearInterval(gifTimerRef.current);
+        gifTimerRef.current = setInterval(function(){
+          setGifTick(function(t){ return t + 1; });
+        }, 2500);
+        return function(){
+          if(gifTimerRef.current) clearInterval(gifTimerRef.current);
+        };
+      }, [isGifCarousel, activeImg]);
 
       /* Autoplay — advances every 3.2s when project.autoplay is true */
       React.useEffect(function(){
@@ -2814,36 +2893,115 @@
           /* Close */
           React.createElement('button',{onClick:onClose,style:{position:"absolute",top:12,right:12,width:30,height:30,borderRadius:"50%",border:"none",background:"rgba(30,29,58,0.55)",color:"#f4efe7",fontSize:15,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",zIndex:10}},"✕"),
 
-          /* ── Image area ── */
-          React.createElement('div',{style:{width:"100%",aspectRatio:"1/1",overflow:"hidden",borderRadius:"14px 14px 0 0",background:"#e8e2da",position:"relative"}},
-
-            /* Main image */
-            React.createElement('img',{
-              key: displaySrc,
-              src: displaySrc,
-              alt: displayCaption || project.title,
-              style:{width:"100%",height:"100%",objectFit:"contain",display:"block",transition:"opacity 0.25s ease"},
-              loading:"lazy"
-            }),
-
-            /* Caption strip */
-            displayCaption && React.createElement('div',{style:{position:"absolute",bottom:0,left:0,right:0,background:"rgba(30,29,58,0.58)",padding:"8px 16px",display:"flex",alignItems:"center",justifyContent:"space-between"}},
-              React.createElement('p',{style:{fontFamily:"'Courier Prime',monospace",fontSize:10,letterSpacing:"0.13em",color:"#f4efe7",margin:0}}, displayCaption),
-              isCarousel && React.createElement('span',{style:{fontFamily:"'Courier Prime',monospace",fontSize:10,color:"rgba(244,239,231,0.55)",marginLeft:12,flexShrink:0}},
-                (activeImg+1) + " / " + total
+          /* ── Flip card OR regular image area ── */
+          isFlipCard
+            ? React.createElement('div',{
+                style:{width:"100%",background:"linear-gradient(135deg,#e8e2da 0%,#ddd5cc 100%)",borderRadius:"14px 14px 0 0",padding:"28px 24px 20px",display:"flex",flexDirection:"column",alignItems:"center",gap:14}
+              },
+                /* Hint text */
+                React.createElement('p',{style:{fontFamily:"'Courier Prime',monospace",fontSize:9,letterSpacing:"0.20em",textTransform:"uppercase",color:"rgba(30,29,58,0.42)",margin:0}},
+                  cardFlipped ? "✦ showing the back ✦" : "✦ click the card to flip ✦"
+                ),
+                /* 3-D flip card — portrait, click controlled */
+                React.createElement('div',{
+                  onClick:function(e){e.stopPropagation(); setCardFlipped(function(f){return !f;});},
+                  style:{
+                    width:"100%",
+                    maxWidth:320,
+                    aspectRatio:"2/3",       /* Portrait — full vertical card */
+                    perspective:"1200px",
+                    cursor:"pointer",
+                    flexShrink:0
+                  }
+                },
+                  React.createElement('div',{
+                    style:{
+                      width:"100%",height:"100%",
+                      position:"relative",
+                      transformStyle:"preserve-3d",
+                      transition:"transform 0.70s cubic-bezier(0.22,1,0.36,1)",
+                      transform: cardFlipped ? "rotateY(180deg)" : "rotateY(0deg)"
+                    }
+                  },
+                    /* Front face */
+                    React.createElement('div',{
+                      style:{
+                        position:"absolute",inset:0,
+                        backfaceVisibility:"hidden",WebkitBackfaceVisibility:"hidden",
+                        borderRadius:12,overflow:"hidden",
+                        boxShadow:"0 12px 40px rgba(30,29,58,0.28)",
+                        background:"#f0ece8"
+                      }
+                    },
+                      React.createElement('img',{
+                        src:project.frontImage,
+                        alt:"Name card — front",
+                        style:{width:"100%",height:"100%",objectFit:"contain",display:"block"},
+                        loading:"lazy"
+                      })
+                    ),
+                    /* Back face */
+                    React.createElement('div',{
+                      style:{
+                        position:"absolute",inset:0,
+                        backfaceVisibility:"hidden",WebkitBackfaceVisibility:"hidden",
+                        transform:"rotateY(180deg)",
+                        borderRadius:12,overflow:"hidden",
+                        boxShadow:"0 12px 40px rgba(30,29,58,0.28)",
+                        background:"#f0ece8"
+                      }
+                    },
+                      React.createElement('img',{
+                        src:project.backImage,
+                        alt:"Name card — back",
+                        style:{width:"100%",height:"100%",objectFit:"contain",display:"block"},
+                        loading:"lazy"
+                      }),
+                      /* Privacy remark strip */
+                      React.createElement('div',{
+                        style:{
+                          position:"absolute",bottom:0,left:0,right:0,
+                          background:"rgba(30,29,58,0.72)",
+                          padding:"8px 14px",
+                          display:"flex",alignItems:"center",gap:6
+                        }
+                      },
+                        React.createElement('span',{style:{fontSize:12,flexShrink:0}},"🔒"),
+                        React.createElement('p',{
+                          style:{fontFamily:"'Courier Prime',monospace",fontSize:9,letterSpacing:"0.12em",color:"rgba(255,253,208,0.88)",margin:0,lineHeight:1.5}
+                        },"Some personal information is crossed out for privacy.")
+                      )
+                    )
+                  )
+                ),
+                /* Click-again hint below the card */
+                React.createElement('p',{style:{fontFamily:"'Courier Prime',monospace",fontSize:9,letterSpacing:"0.14em",color:"rgba(30,29,58,0.35)",margin:0}},
+                  cardFlipped ? "Click again to see the front →" : "← Click to see the back"
+                )
               )
-            ),
-
-            /* Carousel prev/next arrows */
-            isCarousel && React.createElement('button',{
-              onClick:prev,
-              style:{position:"absolute",left:10,top:"50%",transform:"translateY(-50%)",width:36,height:36,borderRadius:"50%",border:"none",background:"rgba(30,29,58,0.52)",color:"#f4efe7",fontSize:18,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",zIndex:5,backdropFilter:"blur(4px)"}
-            },"‹"),
-            isCarousel && React.createElement('button',{
-              onClick:next,
-              style:{position:"absolute",right:10,top:"50%",transform:"translateY(-50%)",width:36,height:36,borderRadius:"50%",border:"none",background:"rgba(30,29,58,0.52)",color:"#f4efe7",fontSize:18,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",zIndex:5,backdropFilter:"blur(4px)"}
-            },"›")
-          ),
+            : React.createElement('div',{style:{width:"100%",aspectRatio: isGifCarousel ? "1/1" : "4/3",overflow:"hidden",borderRadius:"14px 14px 0 0",background:"#e8e2da",position:"relative"}},
+                React.createElement('img',{
+                  key: displaySrc + '_' + activeImg + '_' + gifTick,
+                  src: isGifCarousel ? displaySrc + '?t=' + (activeImg * 1000 + gifTick) : displaySrc,
+                  alt: displayCaption || project.title,
+                  style:{width:"100%",height:"100%",objectFit:"contain",display:"block"},
+                  loading:"eager"
+                }),
+                displayCaption && React.createElement('div',{style:{position:"absolute",bottom:0,left:0,right:0,background:"rgba(30,29,58,0.58)",padding:"8px 16px",display:"flex",alignItems:"center",justifyContent:"space-between"}},
+                  React.createElement('p',{style:{fontFamily:"'Courier Prime',monospace",fontSize:10,letterSpacing:"0.13em",color:"#f4efe7",margin:0}}, displayCaption),
+                  isCarousel && React.createElement('span',{style:{fontFamily:"'Courier Prime',monospace",fontSize:10,color:"rgba(244,239,231,0.55)",marginLeft:12,flexShrink:0}},
+                    (activeImg+1) + " / " + total
+                  )
+                ),
+                isCarousel && React.createElement('button',{
+                  onClick:prev,
+                  style:{position:"absolute",left:10,top:"50%",transform:"translateY(-50%)",width:36,height:36,borderRadius:"50%",border:"none",background:"rgba(30,29,58,0.52)",color:"#f4efe7",fontSize:18,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",zIndex:5,backdropFilter:"blur(4px)"}
+                },"‹"),
+                isCarousel && React.createElement('button',{
+                  onClick:next,
+                  style:{position:"absolute",right:10,top:"50%",transform:"translateY(-50%)",width:36,height:36,borderRadius:"50%",border:"none",background:"rgba(30,29,58,0.52)",color:"#f4efe7",fontSize:18,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",zIndex:5,backdropFilter:"blur(4px)"}
+                },"›")
+              ),
 
           /* Dot indicators — carousel only */
           isCarousel && React.createElement('div',{style:{display:"flex",justifyContent:"center",alignItems:"center",gap:6,padding:"10px 0",background:"#ede8e0",borderBottom:"1px solid #c8c0b0"}},
