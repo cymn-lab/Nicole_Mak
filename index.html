@@ -994,118 +994,78 @@
         @media (max-width: 767px) {
 
             /* ── Global spacing ── */
-            main { padding-left: 1rem !important; padding-right: 1rem !important; padding-top: 3rem !important; padding-bottom: 7rem !important; }
+            main { padding-left: 1rem !important; padding-right: 1rem !important; padding-top: 3rem !important; }
 
-            /* ── Light switch ── */
+            /* ── Light switch — smaller, doesn't crowd hero ── */
             #light-switch { top: 1rem !important; right: 1rem !important; }
             #switch-plate { width: 2rem !important; height: 3.25rem !important; }
             #switch-track { width: 0.85rem !important; height: 1.6rem !important; }
 
-            /* ── Bottom nav ── */
-            nav.fixed.bottom-8 { bottom: 1.25rem !important; }
-            .nav-glass { padding: 0.5rem 1rem !important; gap: 0.75rem !important; }
-            .nav-icon { width: 2.25rem !important; height: 2.25rem !important; min-height: 44px; }
+            /* ── Bottom nav — tighter on mobile ── */
+            nav.fixed.bottom-8 { bottom: 1.25rem !important; padding-left: 1rem !important; padding-right: 1rem !important; }
+            .nav-glass { padding: 0.5rem 1.25rem !important; gap: 1rem !important; }
+            .nav-icon { width: 2.25rem !important; height: 2.25rem !important; }
             .nav-icon svg { width: 1.1rem !important; height: 1.1rem !important; }
 
-            /* ── Hero: single column ── */
-            #hero-header { border-radius: 18px !important; }
+            /* ── Hero: single column, manageable type ── */
+            #hero-header { border-radius: 18px !important; min-height: unset !important; }
             #hero-header .lg\:grid-cols-2 { grid-template-columns: 1fr !important; }
             #hero-header .grid { gap: 0 !important; padding: 1.75rem 1.5rem 1.5rem !important; min-height: unset !important; }
-            #hero-header .flex.flex-col.justify-end.gap-0 { width: 100% !important; padding-bottom: 1.25rem !important; }
+
+            /* Left column — centred, full width */
+            #hero-header .flex.flex-col.justify-end.gap-0 {
+                width: 100% !important;
+                padding-bottom: 1.25rem !important;
+            }
+
+            /* Heading sizes — reduce to fit a 375px screen */
             #hero-header h1:first-of-type { font-size: clamp(2.4rem, 9vw, 3.2rem) !important; }
             #hero-header h1:last-of-type  { font-size: clamp(1.9rem, 7.5vw, 2.6rem) !important; }
+
+            /* Bio text — slightly tighter */
             #hero-header p.font-sans { font-size: 0.88rem !important; max-width: 100% !important; }
 
-            /* Hide lamp/player right column on mobile */
+            /* Journey tags panel — hide on mobile (redundant on small screen) */
+            #hero-header .absolute.top-10 { display: none !important; }
+
+            /* Right column: hide the lamp/player row completely on mobile to avoid clutter */
             #hero-header .relative.w-full.flex.flex-col.justify-end { display: none !important; }
 
-            /* ── Hero memos — fully hidden (inline style + visibility belt-and-suspenders) ── */
-            #hero-memos { display: none !important; visibility: hidden !important; pointer-events: none !important; opacity: 0 !important; }
-            #hero-memos > * { display: none !important; visibility: hidden !important; }
-            .hero-memo { display: none !important; visibility: hidden !important; }
-
-            /* ── About window — mobile fix ── */
-            #about-window {
-                width: 240px !important;
-                height: 310px !important;
-                margin-bottom: 95px !important;
-                perspective: none !important;
-                overflow: visible !important; /* let the wrapper be natural */
-            }
-            /* Tilt inner — no 3D, fills parent */
-            #about-window .window-tilt-inner {
-                transform: none !important;
-                transform-style: flat !important;
-            }
-            /* The glass IS the clip boundary — restore it fully */
-            #win-glass {
-                overflow: hidden !important;
-                border-radius: 100px 100px 8px 8px !important;
-                /* Scale border to match smaller window */
-                border-width: 8px !important;
-                outline: none !important;
-                /* Kill external glow that bleeds */
-                box-shadow: 0 4px 16px rgba(46,58,77,0.18) !important;
-            }
-            /* Window pane border must match glass arch */
-            .window-pane-border {
-                border-radius: 90px 90px 3px 3px !important;
-            }
-            /* Sun & moon — no external glow bleed */
-            #win-sun  { box-shadow: none !important; }
-            #win-moon { box-shadow: none !important; }
-            /* Curtains — clip within glass */
-            #win-curtain-l,
-            #win-curtain-r { overflow: hidden !important; }
-            /* Sill — scale down */
-            .window-sill { height: 14px !important; }
-            /* Hint chips */
-            #win-hint-tag { bottom: -38px !important; }
-            .journey-tag-card { padding: 6px 12px !important; }
-            #win-time-wrap { bottom: -78px !important; }
-
-            /* Hint & scrubber: tighten */
-            .win-hint-pill,
-            [id="win-hint-tag"] { font-size: 7px !important; padding: 5px 10px !important; }
-            #win-time-wrap { bottom: -72px !important; }
-            .win-scrubber-card { padding: 6px 8px !important; }
-            #win-time-label { font-size: 8px !important; }
-
-            /* About bio right column */
+            /* ── About: stack window above bio ── */
+            #about .grid { grid-template-columns: 1fr !important; gap: 2rem !important; }
+            #about-window { width: 100% !important; max-width: 280px !important; height: 360px !important; }
             #about .flex.justify-center { justify-content: center !important; }
             #about .border-t.pt-6 { padding-top: 1rem !important; }
+
+            /* About tags — wrap freely */
             .about-tag-row { flex-wrap: wrap !important; gap: 0.5rem !important; }
             .about-tag-pill { font-size: 10px !important; padding: 0.35rem 0.75rem !important; }
 
-            /* ── Ideas / Late Night ── */
+            /* ── Ideas section: 2-col polaroid grid then bookshelf ── */
             #ideas .grid-cols-3,
-            #ideas .md\:grid-cols-3 { grid-template-columns: repeat(2, 1fr) !important; gap: 0.75rem !important; }
-            .project-card-container { height: 300px !important; }
-            .polaroid-back h3 { font-size: 0.95rem !important; }
-            .polaroid-back p  { font-size: 0.78rem !important; margin-bottom: 0.6rem !important; }
-            .view-details-btn { padding: 0.4rem 0.9rem !important; font-size: 9px !important; min-height: 36px; }
+            #ideas .md\:grid-cols-3 { grid-template-columns: repeat(2, 1fr) !important; gap: 1rem !important; }
 
-            /* Filter strip — horizontal scroll */
-            #ideas .flex.flex-wrap { flex-wrap: nowrap !important; overflow-x: auto !important; -webkit-overflow-scrolling: touch !important; padding-bottom: 0.5rem !important; gap: 0.5rem !important; scrollbar-width: none; }
-            #ideas .flex.flex-wrap::-webkit-scrollbar { display: none; }
+            /* Project cards — compact height */
+            .project-card-container { height: 320px !important; }
+            .polaroid-back h3 { font-size: 1rem !important; }
+            .polaroid-back p  { font-size: 0.8rem !important; margin-bottom: 0.75rem !important; }
+            .view-details-btn { padding: 0.4rem 1rem !important; font-size: 9px !important; }
+
+            /* Bookshelf — horizontal scroll on mobile */
+            #bookshelf-root { overflow-x: auto !important; -webkit-overflow-scrolling: touch !important; }
+
+            /* Filter buttons — horizontal scroll strip */
+            #ideas .flex.flex-wrap { flex-wrap: nowrap !important; overflow-x: auto !important; -webkit-overflow-scrolling: touch !important; padding-bottom: 0.5rem !important; gap: 0.5rem !important; }
             #ideas .flex.flex-wrap button,
             #ideas .flex.flex-wrap a { flex-shrink: 0 !important; white-space: nowrap !important; font-size: 10px !important; padding: 0.35rem 0.85rem !important; }
 
-            /* Bookshelf — horizontal scroll */
-            #bookshelf-root { overflow-x: auto !important; -webkit-overflow-scrolling: touch !important; }
-
             /* ── Guestbook ── */
-            #guestbook { max-width: 100% !important; }
             #guestbook .grid { grid-template-columns: 1fr !important; }
-            #guestbook .md\:grid-cols-2,
+            #guestbook .md\:grid-cols-2 { grid-template-columns: 1fr !important; }
             #guestbook .lg\:grid-cols-3 { grid-template-columns: 1fr !important; }
-            .flipping-book-container { height: 340px !important; }
-
-            /* Stardust quote — tap to reveal (already handled by JS click listener) */
-            #stardust-quote { font-size: 1rem !important; line-height: 1.9 !important; }
-            .sq-word { cursor: pointer !important; }
 
             /* ── React detail overlay modal ── */
+            /* The portal renders at fixed inset-0 — needs padding adjustment */
             [style*="position:fixed"][style*="z-index:9999"] > div {
                 max-height: 95vh !important;
                 border-radius: 12px !important;
@@ -1113,45 +1073,28 @@
                 max-width: calc(100vw - 1rem) !important;
             }
 
+            /* ── Marquee / ticker text ── */
+            .marquee-text { font-size: 0.75rem !important; }
+
             /* ── Section headings ── */
             section h2.text-5xl,
-            section h2.text-4xl,
-            section h2.text-3xl { font-size: 1.85rem !important; }
+            section h2.text-4xl { font-size: 2rem !important; }
 
-            /* ── Section margins ── */
-            section.mb-32 { margin-bottom: 3.5rem !important; }
-            section.mb-20 { margin-bottom: 2.5rem !important; }
-
-            /* ── Glass cards ── */
-            .glass-card.p-8,
-            .glass-card.md\:p-12,
+            /* ── Section padding ── */
+            section.mb-32 { margin-bottom: 4rem !important; }
+            .glass-card.p-8 { padding: 1.25rem !important; }
+            .glass-card.md\:p-12 { padding: 1.25rem !important; }
             .glass-card.lg\:p-16 { padding: 1.25rem !important; }
 
-            /* ── Marquee ── */
-            .marquee-text { font-size: 0.72rem !important; }
-
-            /* ── Tap targets ── */
-            .hero-cta-primary, button, a.font-mono { min-height: 44px; }
-
-            /* ── Motion: simplify all to fade-up, remove delays ── */
-            [data-motion] { transform: translateY(20px) !important; filter: none !important; }
-            [data-stagger] > * { transform: translateY(16px) !important; }
-            [data-delay] { transition-delay: 0s !important; }
+            /* ── Footer / pb-44 main padding (leaves room for nav bar) ── */
+            main { padding-bottom: 7rem !important; }
         }
 
-        /* ── Safe-area insets (iPhone notch / home bar) ── */
-        @supports (padding-bottom: env(safe-area-inset-bottom)) {
-            @media (max-width: 767px) {
-                nav.fixed { padding-bottom: max(1.25rem, env(safe-area-inset-bottom)) !important; }
-                main { padding-bottom: max(7rem, calc(6rem + env(safe-area-inset-bottom))) !important; }
-            }
-        }
-
-        /* ── Tablet 768–1023px ── */
+        /* ── Medium screens 768–1023px: tablet tweaks ── */
         @media (min-width: 768px) and (max-width: 1023px) {
-            #about-window { width: 300px !important; height: 400px !important; margin-bottom: 108px !important; }
-            .project-card-container { height: 340px !important; }
-            #hero-memos { display: none !important; }
+            #hero-header .absolute.top-10 { max-width: 220px !important; }
+            .project-card-container { height: 350px !important; }
+            #about-window { width: 300px !important; height: 400px !important; }
         }
     </style>
 <body class="font-sans antialiased relative min-h-screen overflow-x-hidden flex flex-col items-center">
@@ -1328,269 +1271,55 @@
             <!-- ═══ LAYER 6 — CONTENT (z-20) ═══ -->
             <div class="relative z-20 grid lg:grid-cols-2 gap-12 items-end min-h-[400px] p-10 md:p-16 lg:p-20">
 
-                <!-- ── JOURNEY MEMOS — redesigned draggable sticky notes ── -->
-                <div id="hero-memos" aria-label="Journey tags" style="position:absolute;inset:0;pointer-events:none;z-index:30;">
+                <!-- ── JOURNEY TAGS — lifted to content level, top-right, aligns with eyebrow ── -->
+                <div class="absolute top-10 md:top-16 lg:top-20 right-10 md:right-16 lg:right-20 z-30 pointer-events-none flex flex-col items-end gap-2.5"
+                     style="max-width:228px; width:calc(50% - 3rem);" aria-hidden="true" data-stagger>
 
-                    <!-- Memo 1: VIBE — lavender -->
-                    <div class="hero-memo memo-enter" id="memo-1"
-                         style="left:55%;top:6%;--rot:-2deg;--sway-from:-1.5deg;--sway-to:1.8deg;--enter-delay:0.55s;background:rgba(218,214,244,0.93);">
-                        <div class="memo-pin" style="background:#9b8fd4;"></div>
-                        <div class="memo-ruled-lines" aria-hidden="true"></div>
-                        <div class="memo-fold"></div>
-                        <p class="memo-eyebrow" style="color:rgba(46,40,80,0.40);">VIBE</p>
-                        <p class="memo-body" style="color:rgba(28,20,58,0.86);">late-night mode</p>
-                        <span class="memo-emoji">🌙</span>
+                    <!-- Label -->
+                    <p class="hero-tags-label font-mono text-[9px] uppercase tracking-[0.26em] text-navy/35 mb-0.5 self-start">✦ my journey tags ✦</p>
+
+                    <!-- Sparkle accents -->
+                    <div class="absolute animate-[float_5s_ease-in-out_infinite]" style="top:-8px; right:2px; animation-delay:0.5s;">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 2l2.2 7.8L22 12l-7.8 2.2L12 22l-2.2-7.8L2 12l7.8-2.2Z" fill="rgba(170,158,215,0.60)"/></svg>
+                    </div>
+                    <div class="absolute animate-[float_7s_ease-in-out_infinite]" style="top:34%; right:-10px; animation-delay:1.8s;">
+                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none"><path d="M12 2l2.2 7.8L22 12l-7.8 2.2L12 22l-2.2-7.8L2 12l7.8-2.2Z" fill="rgba(212,188,100,0.55)"/></svg>
                     </div>
 
-                    <!-- Memo 2: INSPO — butter -->
-                    <div class="hero-memo memo-enter" id="memo-2"
-                         style="left:72%;top:14%;--rot:3deg;--sway-from:-2deg;--sway-to:1.2deg;--enter-delay:0.75s;background:rgba(248,236,162,0.92);">
-                        <div class="memo-pin" style="background:#c8a830;"></div>
-                        <div class="memo-ruled-lines" aria-hidden="true"></div>
-                        <div class="memo-fold"></div>
-                        <p class="memo-eyebrow" style="color:rgba(72,58,10,0.42);">INSPO</p>
-                        <p class="memo-body" style="color:rgba(52,40,6,0.88);">crafting stories</p>
-                        <span class="memo-emoji">🧵</span>
+                    <!-- Tag 1: VIBE — lavender -->
+                    <div class="w-full animate-[float_7s_ease-in-out_infinite]" style="animation-delay:0s;">
+                        <div class="journey-tag-card" style="background:rgba(210,205,240,0.82);">
+                            <div class="journey-tag-text">
+                                <p class="journey-tag-label text-navy/40">VIBE</p>
+                                <p class="journey-tag-value text-navy/82">late-night mode</p>
+                            </div>
+                            <span class="journey-tag-emoji" style="font-size:1.45rem; opacity:0.80;">🌙</span>
+                        </div>
                     </div>
 
-                    <!-- Memo 3: OPEN TO — navy -->
-                    <div class="hero-memo memo-enter" id="memo-3"
-                         style="left:58%;top:38%;--rot:-2.5deg;--sway-from:-1deg;--sway-to:2.2deg;--enter-delay:0.95s;background:rgba(38,48,64,0.94);">
-                        <div class="memo-pin" style="background:#d4bc6a;"></div>
-                        <div class="memo-ruled-lines" style="border-color:rgba(255,253,208,0.10);" aria-hidden="true"></div>
-                        <div class="memo-fold" style="border-color:transparent transparent rgba(255,253,208,0.12) transparent;"></div>
-                        <p class="memo-eyebrow" style="color:rgba(255,253,208,0.45);">OPEN TO</p>
-                        <p class="memo-body" style="color:rgba(255,253,208,0.92);">new collabs</p>
-                        <span class="memo-emoji">🤝</span>
+                    <!-- Tag 2: INSPO — butter -->
+                    <div class="w-full animate-[float_8.5s_ease-in-out_infinite]" style="animation-delay:1.1s;">
+                        <div class="journey-tag-card" style="background:rgba(240,228,152,0.86);">
+                            <div class="journey-tag-text">
+                                <p class="journey-tag-label" style="color:rgba(78,66,18,0.45);">INSPO</p>
+                                <p class="journey-tag-value" style="color:rgba(58,46,8,0.86);">crafting stories</p>
+                            </div>
+                            <span class="journey-tag-emoji" style="font-size:1.45rem; opacity:0.82;">🧵</span>
+                        </div>
+                    </div>
+
+                    <!-- Tag 3: OPEN TO — navy -->
+                    <div class="w-full animate-[float_10s_ease-in-out_infinite]" style="animation-delay:2.4s;">
+                        <div class="journey-tag-card" style="background:rgba(46,58,77,0.90);">
+                            <div class="journey-tag-text">
+                                <p class="journey-tag-label" style="color:rgba(255,253,208,0.42);">OPEN TO</p>
+                                <p class="journey-tag-value" style="color:#FFFDD0;">new collabs</p>
+                            </div>
+                            <span class="journey-tag-emoji" style="font-size:1.45rem; opacity:0.82;">🤝</span>
+                        </div>
                     </div>
 
                 </div>
-
-                <style>
-                    /* ── Memo card ── */
-                    .hero-memo {
-                        position: absolute;
-                        width: 156px;
-                        padding: 30px 16px 18px;
-                        border-radius: 2px 2px 2px 12px; /* folded bottom-left */
-                        cursor: grab;
-                        user-select: none;
-                        pointer-events: auto;
-                        transform: rotate(var(--rot, 0deg));
-                        box-shadow:
-                            0 2px 4px rgba(30,24,60,0.10),
-                            0 6px 18px rgba(30,24,60,0.13),
-                            0 18px 40px rgba(30,24,60,0.08),
-                            inset 0 1px 0 rgba(255,255,255,0.55),
-                            inset 0 -1px 0 rgba(0,0,0,0.04);
-                        /* Paper grain */
-                        background-image:
-                            url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.70' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)' opacity='0.40'/%3E%3C/svg%3E");
-                        background-size: 100px 100px;
-                        background-blend-mode: overlay;
-                        /* Idle sway */
-                        animation: memoSway 5s ease-in-out infinite;
-                        animation-delay: calc(var(--enter-delay, 0s) + 0.4s);
-                        transition: box-shadow 0.25s ease, filter 0.25s ease;
-                    }
-
-                    /* Idle gentle sway */
-                    @keyframes memoSway {
-                        0%,100% { transform: rotate(var(--sway-from, -1deg)) translateY(0px); }
-                        50%     { transform: rotate(var(--sway-to,  1deg))   translateY(-3px); }
-                    }
-
-                    /* Scatter-in entrance — falls from above and settles */
-                    .memo-enter {
-                        animation: memoEnter 0.7s cubic-bezier(0.22,1,0.36,1) both,
-                                   memoSway 5s ease-in-out infinite;
-                        animation-delay: var(--enter-delay, 0.5s), calc(var(--enter-delay, 0s) + 0.8s);
-                    }
-                    /* After entrance completes (JS removes memo-enter), just sway */
-                    .hero-memo:not(.memo-enter) {
-                        animation: memoSway 5s ease-in-out infinite;
-                    }
-                    @keyframes memoEnter {
-                        0%   { opacity:0; transform: rotate(calc(var(--rot,0deg) + 8deg)) translateY(-40px) scale(0.88); }
-                        70%  { transform: rotate(calc(var(--rot,0deg) - 1.5deg)) translateY(4px) scale(1.02); }
-                        100% { opacity:1; transform: rotate(var(--rot,0deg)) translateY(0) scale(1); }
-                    }
-
-                    /* Hover — lift and slight warm glow */
-                    .hero-memo:not(.dragging):hover {
-                        box-shadow:
-                            0 4px 8px rgba(30,24,60,0.14),
-                            0 16px 40px rgba(30,24,60,0.18),
-                            0 32px 60px rgba(30,24,60,0.10),
-                            inset 0 1px 0 rgba(255,255,255,0.65);
-                        filter: brightness(1.04);
-                        animation-play-state: paused; /* pause sway on hover */
-                    }
-
-                    /* Dragging state — full lift, wobble, no transition */
-                    .hero-memo.dragging {
-                        cursor: grabbing;
-                        animation-play-state: paused;
-                        transition: none;
-                        box-shadow:
-                            0 8px 16px rgba(30,24,60,0.18),
-                            0 24px 56px rgba(30,24,60,0.22),
-                            0 48px 80px rgba(30,24,60,0.12);
-                        filter: brightness(1.06);
-                        transform: rotate(calc(var(--rot,0deg) + var(--drag-tilt,3deg))) scale(1.04) !important;
-                    }
-
-                    /* Drop — memo settles back to sway after drag; no extra keyframe needed */
-                    .hero-memo.bounce {
-                        transition: transform 0.35s cubic-bezier(0.22,1,0.36,1), box-shadow 0.25s ease;
-                    }
-
-                    /* Pin head */
-                    .memo-pin {
-                        position: absolute;
-                        top: -7px;
-                        left: 50%;
-                        transform: translateX(-50%);
-                        width: 14px;
-                        height: 14px;
-                        border-radius: 50%;
-                        box-shadow: 0 2px 6px rgba(0,0,0,0.28), inset 0 1px 0 rgba(255,255,255,0.45);
-                        z-index: 2;
-                    }
-                    /* Pin stem */
-                    .memo-pin::after {
-                        content:'';
-                        position:absolute;
-                        bottom:-6px;
-                        left:50%;
-                        transform:translateX(-50%);
-                        width:2px;
-                        height:8px;
-                        background:rgba(0,0,0,0.25);
-                        border-radius:1px;
-                    }
-
-                    /* Ruled lines — lined paper feel */
-                    .memo-ruled-lines {
-                        position: absolute;
-                        inset: 28px 10px 10px;
-                        border-top: 1px solid rgba(46,40,80,0.10);
-                        box-shadow:
-                            0 12px 0 rgba(46,40,80,0.06),
-                            0 24px 0 rgba(46,40,80,0.06),
-                            0 36px 0 rgba(46,40,80,0.05);
-                        pointer-events: none;
-                    }
-
-                    /* Folded corner — bottom right */
-                    .memo-fold {
-                        position: absolute;
-                        bottom: 0;
-                        right: 0;
-                        width: 18px;
-                        height: 18px;
-                        border-style: solid;
-                        border-width: 0 0 18px 18px;
-                        border-color: transparent transparent rgba(0,0,0,0.10) transparent;
-                        border-radius: 0 0 2px 0;
-                        pointer-events: none;
-                    }
-
-                    /* Text */
-                    .memo-eyebrow {
-                        font-family: 'Courier Prime', monospace;
-                        font-size: 8px;
-                        letter-spacing: 0.20em;
-                        text-transform: uppercase;
-                        line-height: 1;
-                        margin: 0 0 6px;
-                        position: relative; z-index:1;
-                    }
-                    .memo-body {
-                        font-family: 'Courier Prime', monospace;
-                        font-size: 13px;
-                        font-weight: 700;
-                        line-height: 1.3;
-                        margin: 0 0 10px;
-                        position: relative; z-index:1;
-                    }
-                    .memo-emoji {
-                        font-size: 1.5rem;
-                        display: block;
-                        line-height: 1;
-                        position: relative; z-index:1;
-                        filter: drop-shadow(0 1px 3px rgba(0,0,0,0.12));
-                        transition: transform 0.3s cubic-bezier(0.22,1,0.36,1);
-                    }
-                    .hero-memo:hover .memo-emoji { transform: scale(1.18) rotate(8deg); }
-                    .hero-memo.dragging .memo-emoji { transform: scale(1.1) rotate(-4deg); }
-
-                    /* Dark mode */
-                    body.lights-off .hero-memo:not(#memo-3) { filter: brightness(0.72) saturate(0.78); }
-                    body.lights-off #memo-3 { filter: brightness(1.12); }
-                </style>
-
-                <script>
-                (function() {
-                    var header = document.getElementById('hero-header');
-
-                    // Remove memo-enter after each entrance animation finishes
-                    document.querySelectorAll('.memo-enter').forEach(function(memo) {
-                        var delay = parseFloat(memo.style.getPropertyValue('--enter-delay') || '0.5') * 1000;
-                        setTimeout(function() {
-                            memo.classList.remove('memo-enter');
-                            memo.style.opacity = '1'; // ensure visible
-                        }, delay + 750); // entrance duration 700ms + small buffer
-                    });
-
-                    document.querySelectorAll('.hero-memo').forEach(function(memo) {
-                        var isDragging = false, startX, startY;
-
-                        function onDown(e) {
-                            isDragging = true;
-                            memo.classList.remove('bounce', 'memo-enter');
-                            memo.style.opacity = '1';
-                            memo.classList.add('dragging');
-                            var pos = memo.getBoundingClientRect();
-                            var pt  = e.touches ? e.touches[0] : e;
-                            startX = pt.clientX - pos.left;
-                            startY = pt.clientY - pos.top;
-                            memo.style.setProperty('--drag-tilt', (Math.random() > 0.5 ? 3 : -3) + 'deg');
-                            e.preventDefault();
-                        }
-
-                        function onMove(e) {
-                            if (!isDragging) return;
-                            var pt   = e.touches ? e.touches[0] : e;
-                            var hr   = header.getBoundingClientRect();
-                            var mw   = memo.offsetWidth, mh = memo.offsetHeight;
-                            var newL = pt.clientX - hr.left - startX;
-                            var newT = pt.clientY - hr.top  - startY;
-                            newL = Math.max(0, Math.min(hr.width  - mw, newL));
-                            newT = Math.max(0, Math.min(hr.height - mh, newT));
-                            memo.style.left = newL + 'px';
-                            memo.style.top  = newT + 'px';
-                            e.preventDefault();
-                        }
-
-                        function onUp() {
-                            if (!isDragging) return;
-                            isDragging = false;
-                            memo.classList.remove('dragging');
-                            // Briefly add bounce class for settle transition, then remove
-                            memo.classList.add('bounce');
-                            setTimeout(function() { memo.classList.remove('bounce'); }, 400);
-                        }
-
-                        memo.addEventListener('mousedown',  onDown,  { passive: false });
-                        memo.addEventListener('touchstart', onDown,  { passive: false });
-                        window.addEventListener('mousemove', onMove, { passive: false });
-                        window.addEventListener('touchmove', onMove, { passive: false });
-                        window.addEventListener('mouseup',   onUp);
-                        window.addEventListener('touchend',  onUp);
-                    });
-                })();
-                </script>
 
                 <!-- ── LEFT: Typography ── -->
                 <div class="flex flex-col justify-end gap-0">
