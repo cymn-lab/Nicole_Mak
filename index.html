@@ -1019,27 +1019,38 @@
             /* Hide lamp/player right column on mobile */
             #hero-header .relative.w-full.flex.flex-col.justify-end { display: none !important; }
 
-            /* Hide draggable memos on mobile — too small to interact with */
-            #hero-memos { display: none !important; }
+            /* ── Hero memos — fully hidden (inline style + visibility belt-and-suspenders) ── */
+            #hero-memos { display: none !important; visibility: hidden !important; pointer-events: none !important; opacity: 0 !important; }
+            #hero-memos > * { display: none !important; visibility: hidden !important; }
+            .hero-memo { display: none !important; visibility: hidden !important; }
 
-            /* ── About section ── */
-            #about .grid { grid-template-columns: 1fr !important; gap: 1.5rem !important; }
-
-            /* About window — smaller, centred, no bottom overflow */
+            /* ── About window — clip ALL overflow so light glow, shadows, canvases
+               cannot bleed outside the window frame on small screens ── */
             #about-window {
                 width: 260px !important;
                 height: 320px !important;
                 margin-bottom: 90px !important;
+                overflow: hidden !important;
             }
-            /* Hint pill & scrubber: scale down */
-            .win-hint-pill { padding: 6px 12px !important; }
-            .win-hint-chip { padding: 6px 10px !important; }
-            .win-hint-chip-text { font-size: 7px !important; }
+            /* Remove perspective on mobile (causes shadow context issues) */
+            #about-window { perspective: none !important; }
+            /* Inner tilt wrapper — no transform, clip to frame */
+            #about-window .window-tilt-inner {
+                transform: none !important;
+                transform-style: flat !important;
+                overflow: hidden !important;
+            }
+            /* Kill all glow box-shadows inside the window on mobile */
+            #about-window .window-container { box-shadow: 0 4px 20px rgba(46,58,77,0.18) !important; }
+            #win-sun  { box-shadow: none !important; filter: none !important; }
+            #win-moon { box-shadow: none !important; filter: none !important; }
+
+            /* Hint & scrubber: tighten */
+            .win-hint-pill,
+            [id="win-hint-tag"] { font-size: 7px !important; padding: 5px 10px !important; }
             #win-time-wrap { bottom: -72px !important; }
             .win-scrubber-card { padding: 6px 8px !important; }
-
-            /* About window: disable 3D perspective on mobile (performance) */
-            #about-window .window-tilt-inner { transform: none !important; }
+            #win-time-label { font-size: 8px !important; }
 
             /* About bio right column */
             #about .flex.justify-center { justify-content: center !important; }
