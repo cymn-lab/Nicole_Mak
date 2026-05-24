@@ -1024,26 +1024,45 @@
             #hero-memos > * { display: none !important; visibility: hidden !important; }
             .hero-memo { display: none !important; visibility: hidden !important; }
 
-            /* ── About window — clip ALL overflow so light glow, shadows, canvases
-               cannot bleed outside the window frame on small screens ── */
+            /* ── About window — mobile fix ── */
             #about-window {
-                width: 260px !important;
-                height: 320px !important;
-                margin-bottom: 90px !important;
-                overflow: hidden !important;
+                width: 240px !important;
+                height: 310px !important;
+                margin-bottom: 95px !important;
+                perspective: none !important;
+                overflow: visible !important; /* let the wrapper be natural */
             }
-            /* Remove perspective on mobile (causes shadow context issues) */
-            #about-window { perspective: none !important; }
-            /* Inner tilt wrapper — no transform, clip to frame */
+            /* Tilt inner — no 3D, fills parent */
             #about-window .window-tilt-inner {
                 transform: none !important;
                 transform-style: flat !important;
-                overflow: hidden !important;
             }
-            /* Kill all glow box-shadows inside the window on mobile */
-            #about-window .window-container { box-shadow: 0 4px 20px rgba(46,58,77,0.18) !important; }
-            #win-sun  { box-shadow: none !important; filter: none !important; }
-            #win-moon { box-shadow: none !important; filter: none !important; }
+            /* The glass IS the clip boundary — restore it fully */
+            #win-glass {
+                overflow: hidden !important;
+                border-radius: 100px 100px 8px 8px !important;
+                /* Scale border to match smaller window */
+                border-width: 8px !important;
+                outline: none !important;
+                /* Kill external glow that bleeds */
+                box-shadow: 0 4px 16px rgba(46,58,77,0.18) !important;
+            }
+            /* Window pane border must match glass arch */
+            .window-pane-border {
+                border-radius: 90px 90px 3px 3px !important;
+            }
+            /* Sun & moon — no external glow bleed */
+            #win-sun  { box-shadow: none !important; }
+            #win-moon { box-shadow: none !important; }
+            /* Curtains — clip within glass */
+            #win-curtain-l,
+            #win-curtain-r { overflow: hidden !important; }
+            /* Sill — scale down */
+            .window-sill { height: 14px !important; }
+            /* Hint chips */
+            #win-hint-tag { bottom: -38px !important; }
+            .journey-tag-card { padding: 6px 12px !important; }
+            #win-time-wrap { bottom: -78px !important; }
 
             /* Hint & scrubber: tighten */
             .win-hint-pill,
