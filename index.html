@@ -206,28 +206,45 @@
 
         /* ── Arched Window Scenery ── */
         .window-container {
-            border-radius: 130px 130px 12px 12px;
-            background: linear-gradient(180deg, #7dd3fc 0%, #fde047 100%);
+            border-radius: 130px 130px 10px 10px;
+            box-shadow: inset 0 0 0 3px rgba(200,190,170,0.30), 0 10px 40px rgba(46,58,77,0.20);
+            border: 12px solid #eee8da !important; /* warm painted-wood */
+            outline: 2px solid rgba(180,168,148,0.35);
+            background: #7dd3fc; /* fallback sky */
         }
-        .hill-back { background-color: #84cc16; }
-        .hill-front { background-color: #4d7c0f; }
-        .window-pane { background-color: rgba(255, 255, 255, 0.8); }
-        .window-pane-border { border-color: rgba(255, 255, 255, 0.5); border-radius: 122px 122px 6px 6px; }
-        .window-sill { background-color: #f8fafc; border: 1px solid rgba(46, 58, 77, 0.1); }
+        /* Landscape within the window — no overflow */
+        .win-ground      { background: linear-gradient(to bottom, #6aaa50, #4a8835); }
+        .win-hill-back   { background: linear-gradient(to bottom, #88c060, #5a8a40); border-radius: 60% 60% 0 0; }
+        .win-hill-front  { background: linear-gradient(to bottom, #5a8035, #3a6025); border-radius: 55% 55% 0 0; }
+        .win-tree        { background: #2d5218; border-radius: 50% 50% 12% 12%; }
+        /* Fluffy SVG-style cloud — layered ellipses via pseudo-elements */
+        .win-cloud {
+            position: absolute;
+            pointer-events: none;
+            transition: opacity 0.8s ease;
+        }
+        .window-pane { background-color: rgba(255,255,255,0.72); }
+        .window-pane-border { border-color: rgba(255,255,255,0.40); border-radius: 118px 118px 4px 4px; }
+        .window-sill {
+            background: linear-gradient(to bottom, #ede4d4, #ddd4c2);
+            border: 1px solid rgba(180,168,148,0.35);
+            box-shadow: 0 3px 10px rgba(46,58,77,0.14);
+        }
 
         body.lights-off .window-container {
-            background: linear-gradient(180deg, #0f172a 0%, #3730a3 100%);
-            border-color: #1e293b;
+            background: #0a0818 !important;
+            border-color: #2a2848 !important;
+            outline-color: rgba(80,70,120,0.20);
         }
-        body.lights-off .scenery-sun { transform: translate(-50%, 150px); opacity: 0; }
-        body.lights-off .scenery-moon { transform: translate(-50%, -60%); opacity: 1; }
-        body.lights-off .scenery-stars { opacity: 1; }
-        body.lights-off .scenery-cloud { opacity: 0.1; background-color: #64748b; }
-        body.lights-off .hill-back { background-color: #1e293b; }
-        body.lights-off .hill-front { background-color: #0f172a; }
-        body.lights-off .window-pane { background-color: #334155; }
-        body.lights-off .window-pane-border { border-color: rgba(15, 23, 42, 0.5); }
-        body.lights-off .window-sill { background-color: #1e293b; border-color: rgba(255, 253, 208, 0.1); }
+        body.lights-off .scenery-stars  { opacity: 1; }
+        body.lights-off .win-cloud      { opacity: 0.06 !important; }
+        body.lights-off .win-ground     { background: linear-gradient(to bottom,#152210,#0a1608); }
+        body.lights-off .win-hill-back  { background: linear-gradient(to bottom,#1c2e14,#10200c); }
+        body.lights-off .win-hill-front { background: linear-gradient(to bottom,#14220e,#0a1608); }
+        body.lights-off .win-tree       { background: #0a1006; }
+        body.lights-off .window-pane    { background-color: rgba(20,16,50,0.55); }
+        body.lights-off .window-pane-border { border-color: rgba(20,16,50,0.35); }
+        body.lights-off .window-sill    { background: linear-gradient(to bottom,#2a2848,#1e1c36); border-color:rgba(255,253,208,0.08); }
 
         /* ── Marquee Animation ── */
         .animate-marquee {
@@ -1254,55 +1271,269 @@
             <!-- ═══ LAYER 6 — CONTENT (z-20) ═══ -->
             <div class="relative z-20 grid lg:grid-cols-2 gap-12 items-end min-h-[400px] p-10 md:p-16 lg:p-20">
 
-                <!-- ── JOURNEY TAGS — lifted to content level, top-right, aligns with eyebrow ── -->
-                <div class="absolute top-10 md:top-16 lg:top-20 right-10 md:right-16 lg:right-20 z-30 pointer-events-none flex flex-col items-end gap-2.5"
-                     style="max-width:228px; width:calc(50% - 3rem);" aria-hidden="true" data-stagger>
+                <!-- ── JOURNEY MEMOS — redesigned draggable sticky notes ── -->
+                <div id="hero-memos" aria-label="Journey tags" style="position:absolute;inset:0;pointer-events:none;z-index:30;">
 
-                    <!-- Label -->
-                    <p class="hero-tags-label font-mono text-[9px] uppercase tracking-[0.26em] text-navy/35 mb-0.5 self-start">✦ my journey tags ✦</p>
-
-                    <!-- Sparkle accents -->
-                    <div class="absolute animate-[float_5s_ease-in-out_infinite]" style="top:-8px; right:2px; animation-delay:0.5s;">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 2l2.2 7.8L22 12l-7.8 2.2L12 22l-2.2-7.8L2 12l7.8-2.2Z" fill="rgba(170,158,215,0.60)"/></svg>
-                    </div>
-                    <div class="absolute animate-[float_7s_ease-in-out_infinite]" style="top:34%; right:-10px; animation-delay:1.8s;">
-                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none"><path d="M12 2l2.2 7.8L22 12l-7.8 2.2L12 22l-2.2-7.8L2 12l7.8-2.2Z" fill="rgba(212,188,100,0.55)"/></svg>
-                    </div>
-
-                    <!-- Tag 1: VIBE — lavender -->
-                    <div class="w-full animate-[float_7s_ease-in-out_infinite]" style="animation-delay:0s;">
-                        <div class="journey-tag-card" style="background:rgba(210,205,240,0.82);">
-                            <div class="journey-tag-text">
-                                <p class="journey-tag-label text-navy/40">VIBE</p>
-                                <p class="journey-tag-value text-navy/82">late-night mode</p>
-                            </div>
-                            <span class="journey-tag-emoji" style="font-size:1.45rem; opacity:0.80;">🌙</span>
-                        </div>
+                    <!-- Memo 1: VIBE — lavender -->
+                    <div class="hero-memo memo-enter" id="memo-1"
+                         style="left:55%;top:6%;--rot:-2deg;--sway-from:-1.5deg;--sway-to:1.8deg;--enter-delay:0.55s;background:rgba(218,214,244,0.93);">
+                        <div class="memo-pin" style="background:#9b8fd4;"></div>
+                        <div class="memo-ruled-lines" aria-hidden="true"></div>
+                        <div class="memo-fold"></div>
+                        <p class="memo-eyebrow" style="color:rgba(46,40,80,0.40);">VIBE</p>
+                        <p class="memo-body" style="color:rgba(28,20,58,0.86);">late-night mode</p>
+                        <span class="memo-emoji">🌙</span>
                     </div>
 
-                    <!-- Tag 2: INSPO — butter -->
-                    <div class="w-full animate-[float_8.5s_ease-in-out_infinite]" style="animation-delay:1.1s;">
-                        <div class="journey-tag-card" style="background:rgba(240,228,152,0.86);">
-                            <div class="journey-tag-text">
-                                <p class="journey-tag-label" style="color:rgba(78,66,18,0.45);">INSPO</p>
-                                <p class="journey-tag-value" style="color:rgba(58,46,8,0.86);">crafting stories</p>
-                            </div>
-                            <span class="journey-tag-emoji" style="font-size:1.45rem; opacity:0.82;">🧵</span>
-                        </div>
+                    <!-- Memo 2: INSPO — butter -->
+                    <div class="hero-memo memo-enter" id="memo-2"
+                         style="left:72%;top:14%;--rot:3deg;--sway-from:-2deg;--sway-to:1.2deg;--enter-delay:0.75s;background:rgba(248,236,162,0.92);">
+                        <div class="memo-pin" style="background:#c8a830;"></div>
+                        <div class="memo-ruled-lines" aria-hidden="true"></div>
+                        <div class="memo-fold"></div>
+                        <p class="memo-eyebrow" style="color:rgba(72,58,10,0.42);">INSPO</p>
+                        <p class="memo-body" style="color:rgba(52,40,6,0.88);">crafting stories</p>
+                        <span class="memo-emoji">🧵</span>
                     </div>
 
-                    <!-- Tag 3: OPEN TO — navy -->
-                    <div class="w-full animate-[float_10s_ease-in-out_infinite]" style="animation-delay:2.4s;">
-                        <div class="journey-tag-card" style="background:rgba(46,58,77,0.90);">
-                            <div class="journey-tag-text">
-                                <p class="journey-tag-label" style="color:rgba(255,253,208,0.42);">OPEN TO</p>
-                                <p class="journey-tag-value" style="color:#FFFDD0;">new collabs</p>
-                            </div>
-                            <span class="journey-tag-emoji" style="font-size:1.45rem; opacity:0.82;">🤝</span>
-                        </div>
+                    <!-- Memo 3: OPEN TO — navy -->
+                    <div class="hero-memo memo-enter" id="memo-3"
+                         style="left:58%;top:38%;--rot:-2.5deg;--sway-from:-1deg;--sway-to:2.2deg;--enter-delay:0.95s;background:rgba(38,48,64,0.94);">
+                        <div class="memo-pin" style="background:#d4bc6a;"></div>
+                        <div class="memo-ruled-lines" style="border-color:rgba(255,253,208,0.10);" aria-hidden="true"></div>
+                        <div class="memo-fold" style="border-color:transparent transparent rgba(255,253,208,0.12) transparent;"></div>
+                        <p class="memo-eyebrow" style="color:rgba(255,253,208,0.45);">OPEN TO</p>
+                        <p class="memo-body" style="color:rgba(255,253,208,0.92);">new collabs</p>
+                        <span class="memo-emoji">🤝</span>
                     </div>
 
                 </div>
+
+                <style>
+                    /* ── Memo card ── */
+                    .hero-memo {
+                        position: absolute;
+                        width: 156px;
+                        padding: 30px 16px 18px;
+                        border-radius: 2px 2px 2px 12px; /* folded bottom-left */
+                        cursor: grab;
+                        user-select: none;
+                        pointer-events: auto;
+                        transform: rotate(var(--rot, 0deg));
+                        box-shadow:
+                            0 2px 4px rgba(30,24,60,0.10),
+                            0 6px 18px rgba(30,24,60,0.13),
+                            0 18px 40px rgba(30,24,60,0.08),
+                            inset 0 1px 0 rgba(255,255,255,0.55),
+                            inset 0 -1px 0 rgba(0,0,0,0.04);
+                        /* Paper grain */
+                        background-image:
+                            url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.70' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)' opacity='0.40'/%3E%3C/svg%3E");
+                        background-size: 100px 100px;
+                        background-blend-mode: overlay;
+                        /* Idle sway */
+                        animation: memoSway 5s ease-in-out infinite;
+                        animation-delay: calc(var(--enter-delay, 0s) + 0.4s);
+                        transition: box-shadow 0.25s ease, filter 0.25s ease;
+                    }
+
+                    /* Idle gentle sway */
+                    @keyframes memoSway {
+                        0%,100% { transform: rotate(var(--sway-from, -1deg)) translateY(0px); }
+                        50%     { transform: rotate(var(--sway-to,  1deg))   translateY(-3px); }
+                    }
+
+                    /* Scatter-in entrance — falls from above and settles */
+                    .memo-enter {
+                        animation: memoEnter 0.7s cubic-bezier(0.22,1,0.36,1) both,
+                                   memoSway 5s ease-in-out infinite;
+                        animation-delay: var(--enter-delay, 0.5s), calc(var(--enter-delay, 0s) + 0.8s);
+                    }
+                    /* After entrance completes (JS removes memo-enter), just sway */
+                    .hero-memo:not(.memo-enter) {
+                        animation: memoSway 5s ease-in-out infinite;
+                    }
+                    @keyframes memoEnter {
+                        0%   { opacity:0; transform: rotate(calc(var(--rot,0deg) + 8deg)) translateY(-40px) scale(0.88); }
+                        70%  { transform: rotate(calc(var(--rot,0deg) - 1.5deg)) translateY(4px) scale(1.02); }
+                        100% { opacity:1; transform: rotate(var(--rot,0deg)) translateY(0) scale(1); }
+                    }
+
+                    /* Hover — lift and slight warm glow */
+                    .hero-memo:not(.dragging):hover {
+                        box-shadow:
+                            0 4px 8px rgba(30,24,60,0.14),
+                            0 16px 40px rgba(30,24,60,0.18),
+                            0 32px 60px rgba(30,24,60,0.10),
+                            inset 0 1px 0 rgba(255,255,255,0.65);
+                        filter: brightness(1.04);
+                        animation-play-state: paused; /* pause sway on hover */
+                    }
+
+                    /* Dragging state — full lift, wobble, no transition */
+                    .hero-memo.dragging {
+                        cursor: grabbing;
+                        animation-play-state: paused;
+                        transition: none;
+                        box-shadow:
+                            0 8px 16px rgba(30,24,60,0.18),
+                            0 24px 56px rgba(30,24,60,0.22),
+                            0 48px 80px rgba(30,24,60,0.12);
+                        filter: brightness(1.06);
+                        transform: rotate(calc(var(--rot,0deg) + var(--drag-tilt,3deg))) scale(1.04) !important;
+                    }
+
+                    /* Drop — memo settles back to sway after drag; no extra keyframe needed */
+                    .hero-memo.bounce {
+                        transition: transform 0.35s cubic-bezier(0.22,1,0.36,1), box-shadow 0.25s ease;
+                    }
+
+                    /* Pin head */
+                    .memo-pin {
+                        position: absolute;
+                        top: -7px;
+                        left: 50%;
+                        transform: translateX(-50%);
+                        width: 14px;
+                        height: 14px;
+                        border-radius: 50%;
+                        box-shadow: 0 2px 6px rgba(0,0,0,0.28), inset 0 1px 0 rgba(255,255,255,0.45);
+                        z-index: 2;
+                    }
+                    /* Pin stem */
+                    .memo-pin::after {
+                        content:'';
+                        position:absolute;
+                        bottom:-6px;
+                        left:50%;
+                        transform:translateX(-50%);
+                        width:2px;
+                        height:8px;
+                        background:rgba(0,0,0,0.25);
+                        border-radius:1px;
+                    }
+
+                    /* Ruled lines — lined paper feel */
+                    .memo-ruled-lines {
+                        position: absolute;
+                        inset: 28px 10px 10px;
+                        border-top: 1px solid rgba(46,40,80,0.10);
+                        box-shadow:
+                            0 12px 0 rgba(46,40,80,0.06),
+                            0 24px 0 rgba(46,40,80,0.06),
+                            0 36px 0 rgba(46,40,80,0.05);
+                        pointer-events: none;
+                    }
+
+                    /* Folded corner — bottom right */
+                    .memo-fold {
+                        position: absolute;
+                        bottom: 0;
+                        right: 0;
+                        width: 18px;
+                        height: 18px;
+                        border-style: solid;
+                        border-width: 0 0 18px 18px;
+                        border-color: transparent transparent rgba(0,0,0,0.10) transparent;
+                        border-radius: 0 0 2px 0;
+                        pointer-events: none;
+                    }
+
+                    /* Text */
+                    .memo-eyebrow {
+                        font-family: 'Courier Prime', monospace;
+                        font-size: 8px;
+                        letter-spacing: 0.20em;
+                        text-transform: uppercase;
+                        line-height: 1;
+                        margin: 0 0 6px;
+                        position: relative; z-index:1;
+                    }
+                    .memo-body {
+                        font-family: 'Courier Prime', monospace;
+                        font-size: 13px;
+                        font-weight: 700;
+                        line-height: 1.3;
+                        margin: 0 0 10px;
+                        position: relative; z-index:1;
+                    }
+                    .memo-emoji {
+                        font-size: 1.5rem;
+                        display: block;
+                        line-height: 1;
+                        position: relative; z-index:1;
+                        filter: drop-shadow(0 1px 3px rgba(0,0,0,0.12));
+                        transition: transform 0.3s cubic-bezier(0.22,1,0.36,1);
+                    }
+                    .hero-memo:hover .memo-emoji { transform: scale(1.18) rotate(8deg); }
+                    .hero-memo.dragging .memo-emoji { transform: scale(1.1) rotate(-4deg); }
+
+                    /* Dark mode */
+                    body.lights-off .hero-memo:not(#memo-3) { filter: brightness(0.72) saturate(0.78); }
+                    body.lights-off #memo-3 { filter: brightness(1.12); }
+                </style>
+
+                <script>
+                (function() {
+                    var header = document.getElementById('hero-header');
+
+                    // Remove memo-enter after each entrance animation finishes
+                    document.querySelectorAll('.memo-enter').forEach(function(memo) {
+                        var delay = parseFloat(memo.style.getPropertyValue('--enter-delay') || '0.5') * 1000;
+                        setTimeout(function() {
+                            memo.classList.remove('memo-enter');
+                            memo.style.opacity = '1'; // ensure visible
+                        }, delay + 750); // entrance duration 700ms + small buffer
+                    });
+
+                    document.querySelectorAll('.hero-memo').forEach(function(memo) {
+                        var isDragging = false, startX, startY;
+
+                        function onDown(e) {
+                            isDragging = true;
+                            memo.classList.remove('bounce', 'memo-enter');
+                            memo.style.opacity = '1';
+                            memo.classList.add('dragging');
+                            var pos = memo.getBoundingClientRect();
+                            var pt  = e.touches ? e.touches[0] : e;
+                            startX = pt.clientX - pos.left;
+                            startY = pt.clientY - pos.top;
+                            memo.style.setProperty('--drag-tilt', (Math.random() > 0.5 ? 3 : -3) + 'deg');
+                            e.preventDefault();
+                        }
+
+                        function onMove(e) {
+                            if (!isDragging) return;
+                            var pt   = e.touches ? e.touches[0] : e;
+                            var hr   = header.getBoundingClientRect();
+                            var mw   = memo.offsetWidth, mh = memo.offsetHeight;
+                            var newL = pt.clientX - hr.left - startX;
+                            var newT = pt.clientY - hr.top  - startY;
+                            newL = Math.max(0, Math.min(hr.width  - mw, newL));
+                            newT = Math.max(0, Math.min(hr.height - mh, newT));
+                            memo.style.left = newL + 'px';
+                            memo.style.top  = newT + 'px';
+                            e.preventDefault();
+                        }
+
+                        function onUp() {
+                            if (!isDragging) return;
+                            isDragging = false;
+                            memo.classList.remove('dragging');
+                            // Briefly add bounce class for settle transition, then remove
+                            memo.classList.add('bounce');
+                            setTimeout(function() { memo.classList.remove('bounce'); }, 400);
+                        }
+
+                        memo.addEventListener('mousedown',  onDown,  { passive: false });
+                        memo.addEventListener('touchstart', onDown,  { passive: false });
+                        window.addEventListener('mousemove', onMove, { passive: false });
+                        window.addEventListener('touchmove', onMove, { passive: false });
+                        window.addEventListener('mouseup',   onUp);
+                        window.addEventListener('touchend',  onUp);
+                    });
+                })();
+                </script>
 
                 <!-- ── LEFT: Typography ── -->
                 <div class="flex flex-col justify-end gap-0">
@@ -1548,47 +1779,202 @@
 
                 <div class="grid md:grid-cols-2 gap-10 lg:gap-16 items-start relative z-10">
 
-                    <!-- Left: Arched Window — with mouse-parallax tilt -->
+                    <!-- Left: Arched Window — fully interactive -->
                     <div class="flex justify-center md:justify-start" data-motion="fade-right" data-delay="100">
-                        <div id="about-window" class="relative w-[360px] h-[480px] flex-shrink-0 mx-auto md:mx-0" style="perspective:900px;">
+                        <div id="about-window" class="relative w-[360px] h-[480px] flex-shrink-0 mx-auto md:mx-0" style="perspective:900px; margin-bottom:120px;">
                             <div class="window-tilt-inner w-full h-full" style="transform-style:preserve-3d; transition:transform 0.12s ease-out;">
 
-                                <div class="window-container absolute inset-0 overflow-hidden border-8 border-white backdrop-blur-sm transition-colors duration-1000 z-10 shadow-2xl">
+                                <div id="win-glass" class="window-container absolute inset-0 overflow-hidden border-8 border-white backdrop-blur-sm transition-colors duration-1000 z-10 shadow-2xl cursor-crosshair">
+
+                                    <!-- ── Sky background ── -->
+                                    <div id="win-sky" class="absolute inset-0 transition-all duration-1000 z-0"></div>
+
                                     <!-- Stars (night) -->
-                                    <div class="scenery-stars absolute inset-0 transition-opacity duration-1000 opacity-0 z-0 pointer-events-none">
-                                        <div class="absolute top-10 left-12 w-1 h-1 bg-white rounded-full animate-pulse"></div>
-                                        <div class="absolute top-24 left-8 w-1.5 h-1.5 bg-white/80 rounded-full animate-ping" style="animation-duration:3s"></div>
-                                        <div class="absolute top-16 right-16 w-1 h-1 bg-white rounded-full animate-pulse" style="animation-delay:1s"></div>
-                                        <div class="absolute top-32 right-10 w-2 h-2 bg-white/60 rounded-full animate-pulse" style="animation-duration:4s"></div>
-                                        <div class="absolute top-40 left-1/2 w-1 h-1 bg-white rounded-full animate-ping" style="animation-delay:2s"></div>
-                                        <div class="absolute top-20 left-1/2 w-1.5 h-1.5 bg-white/40 rounded-full animate-pulse"></div>
+                                    <div class="scenery-stars absolute inset-0 transition-opacity duration-1000 opacity-0 z-1 pointer-events-none">
+                                        <div class="absolute top-10  left-12 w-1   h-1   bg-white rounded-full animate-pulse"></div>
+                                        <div class="absolute top-24  left-8  w-1.5 h-1.5 bg-white/80 rounded-full animate-ping" style="animation-duration:3s"></div>
+                                        <div class="absolute top-16  right-16 w-1  h-1   bg-white rounded-full animate-pulse" style="animation-delay:1s"></div>
+                                        <div class="absolute top-32  right-10 w-2  h-2   bg-white/60 rounded-full animate-pulse" style="animation-duration:4s"></div>
+                                        <div class="absolute top-40  left-1/2 w-1  h-1   bg-white rounded-full animate-ping" style="animation-delay:2s"></div>
+                                        <div class="absolute top-20  left-1/2 w-1.5 h-1.5 bg-white/40 rounded-full animate-pulse"></div>
                                     </div>
-                                    <!-- Clouds (day) -->
-                                    <div class="scenery-cloud absolute top-14 left-4 w-16 h-5 bg-white/90 rounded-full blur-[1px] animate-[float_6s_ease-in-out_infinite] z-10 transition-colors duration-1000"></div>
-                                    <div class="scenery-cloud absolute top-28 -right-4 w-24 h-7 bg-white/80 rounded-full blur-[1px] animate-[float_8s_ease-in-out_infinite_reverse] z-10 transition-colors duration-1000"></div>
+
+                                    <!-- Clouds — SVG fluffy, contained within window -->
+                                    <svg class="win-cloud animate-[float_7s_ease-in-out_infinite] absolute" style="top:8%;left:2%;width:38%;opacity:0.92;" viewBox="0 0 120 50" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                        <ellipse cx="60" cy="36" rx="52" ry="16" fill="white" fill-opacity="0.95"/>
+                                        <ellipse cx="44" cy="30" rx="28" ry="20" fill="white" fill-opacity="0.90"/>
+                                        <ellipse cx="70" cy="26" rx="26" ry="20" fill="white" fill-opacity="0.88"/>
+                                        <ellipse cx="58" cy="22" rx="22" ry="17" fill="white" fill-opacity="0.95"/>
+                                    </svg>
+                                    <svg class="win-cloud animate-[float_9s_ease-in-out_infinite_reverse] absolute" style="top:18%;right:3%;width:32%;animation-delay:1.5s;opacity:0.80;" viewBox="0 0 100 44" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                        <ellipse cx="50" cy="32" rx="44" ry="14" fill="white" fill-opacity="0.92"/>
+                                        <ellipse cx="36" cy="26" rx="22" ry="18" fill="white" fill-opacity="0.88"/>
+                                        <ellipse cx="60" cy="22" rx="22" ry="18" fill="white" fill-opacity="0.86"/>
+                                        <ellipse cx="50" cy="18" rx="18" ry="15" fill="white" fill-opacity="0.92"/>
+                                    </svg>
+                                    <svg class="win-cloud animate-[float_11s_ease-in-out_infinite] absolute" style="top:5%;left:30%;width:24%;animation-delay:3s;opacity:0.68;" viewBox="0 0 80 36" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                                        <ellipse cx="40" cy="26" rx="36" ry="12" fill="white" fill-opacity="0.90"/>
+                                        <ellipse cx="30" cy="20" rx="18" ry="16" fill="white" fill-opacity="0.86"/>
+                                        <ellipse cx="50" cy="18" rx="18" ry="16" fill="white" fill-opacity="0.84"/>
+                                    </svg>
+
+                                    <!-- Landscape — fully contained within window frame -->
+                                    <!-- Ground strip -->
+                                    <div class="win-ground absolute bottom-0 left-0 right-0 h-[28%]" style="z-index:20;"></div>
+                                    <!-- Back hill — wide, behind front hill -->
+                                    <div class="win-hill-back absolute" style="bottom:22%;left:-10%;width:65%;height:32%;z-index:21;"></div>
+                                    <!-- Front hill — right side -->
+                                    <div class="win-hill-front absolute" style="bottom:22%;right:-8%;width:58%;height:28%;z-index:22;"></div>
+                                    <!-- Trees — bottom edge sits on ground top (28%) -->
+                                    <div class="win-tree absolute" style="bottom:22%;left:17%;width:11px;height:22px;z-index:23;transform:translateX(-50%);"></div>
+                                    <div class="win-tree absolute" style="bottom:22%;left:26%;width:14px;height:30px;z-index:23;transform:translateX(-50%);"></div>
+                                    <div class="win-tree absolute" style="bottom:22%;left:35%;width:10px;height:18px;z-index:23;transform:translateX(-50%);"></div>
+                                    <div class="win-tree absolute" style="bottom:22%;right:20%;width:13px;height:26px;z-index:23;transform:translateX(50%);"></div>
+                                    <div class="win-tree absolute" style="bottom:22%;right:29%;width:10px;height:20px;z-index:23;transform:translateX(50%);"></div>
+
                                     <!-- Sun -->
-                                    <div class="scenery-sun absolute bg-gradient-to-tr from-yellow-300 to-orange-200 rounded-full top-1/2 left-1/2 -translate-x-1/2 -translate-y-[60%] transition-all duration-1000 z-10 shadow-[0_0_40px_rgba(253,224,71,0.6)]" style="width:77px;height:77px;"></div>
-                                    <!-- Moon -->
-                                    <div class="scenery-moon absolute bg-gradient-to-tr from-gray-100 to-gray-300 rounded-full top-1/2 left-1/2 -translate-x-1/2 translate-y-24 opacity-0 transition-all duration-1000 z-10 shadow-[0_0_30px_rgba(255,255,255,0.4)]" style="width:67px;height:67px;">
-                                        <div class="absolute top-3 left-3 w-3 h-3 bg-gray-400/30 rounded-full"></div>
-                                        <div class="absolute bottom-4 right-4 w-2 h-2 bg-gray-400/30 rounded-full"></div>
-                                        <div class="absolute top-6 right-3 w-4 h-4 bg-gray-400/30 rounded-full"></div>
+                                    <div id="win-sun" class="absolute rounded-full transition-all duration-1000 shadow-[0_0_40px_rgba(253,224,71,0.6)]"
+                                         style="width:56px;height:56px;top:30%;left:50%;transform:translate(-50%,-50%);background:radial-gradient(circle at 35% 35%,#fff7a0,#fdd835 55%,#f59e0b);z-index:5;">
                                     </div>
-                                    <!-- Hills -->
-                                    <div class="hill-back absolute -bottom-8 -left-12 w-48 h-32 rounded-[100px] transition-colors duration-1000 z-20"></div>
-                                    <div class="hill-front absolute -bottom-10 -right-8 w-56 h-36 rounded-[100px] transition-colors duration-1000 z-20"></div>
-                                    <!-- Window panes -->
-                                    <div class="absolute left-1/2 top-0 bottom-0 w-2 -translate-x-1/2 z-30 pointer-events-none window-pane transition-colors duration-1000"></div>
-                                    <div class="absolute top-1/2 left-0 right-0 h-2 -translate-y-1/2 z-30 pointer-events-none window-pane transition-colors duration-1000 mt-4"></div>
-                                    <div class="absolute inset-2 border-2 z-30 pointer-events-none window-pane-border transition-colors duration-1000"></div>
+                                    <!-- Moon -->
+                                    <div id="win-moon" class="absolute rounded-full transition-all duration-1000 shadow-[0_0_28px_rgba(200,210,255,0.50)] opacity-0"
+                                         style="width:52px;height:52px;top:50%;left:50%;transform:translate(-50%,120px);background:radial-gradient(circle at 35% 30%,#f0f0ff,#c8c8e8 60%,#9090b8);z-index:5;">
+                                        <div class="absolute top-3 left-3 w-3 h-3 bg-gray-300/40 rounded-full"></div>
+                                        <div class="absolute bottom-5 right-4 w-2 h-2 bg-gray-300/40 rounded-full"></div>
+                                        <div class="absolute top-7 right-4 w-4 h-4 bg-gray-300/30 rounded-full"></div>
+                                    </div>
+
+                                    <!-- Curtains — flutter on hover -->
+                                    <div id="win-curtain-l" class="absolute top-0 left-0 w-10 h-full z-25 pointer-events-none transition-transform duration-500 origin-left"
+                                         style="background:linear-gradient(to right, rgba(232,210,180,0.75), transparent); border-radius:0 40% 40% 0/0 80px 80px 0;"></div>
+                                    <div id="win-curtain-r" class="absolute top-0 right-0 w-10 h-full z-25 pointer-events-none transition-transform duration-500 origin-right"
+                                         style="background:linear-gradient(to left, rgba(232,210,180,0.75), transparent); border-radius:40% 0 0 40%/80px 0 0 80px;"></div>
+
+
+                                    <!-- Gloomy overlay — activates when raining -->
+                                    <div id="win-gloomy" class="absolute inset-0 z-[28] pointer-events-none transition-opacity duration-700 opacity-0"
+                                         style="background:linear-gradient(to bottom, rgba(80,90,110,0.48) 0%, rgba(60,70,90,0.55) 100%); mix-blend-mode:multiply;"></div>
+
+                                    <!-- Rain canvas -->
+                                    <canvas id="win-rain-canvas" class="absolute inset-0 w-full h-full z-29 pointer-events-none opacity-0 transition-opacity duration-500"></canvas>
+
+                                    <!-- Firefly canvas (night) -->
+                                    <canvas id="win-firefly-canvas" class="absolute inset-0 w-full h-full z-15 pointer-events-none opacity-0 transition-opacity duration-1000"></canvas>
+
+                                    <!-- Ripple layer (click) -->
+                                    <canvas id="win-ripple-canvas" class="absolute inset-0 w-full h-full z-30 pointer-events-none"></canvas>
+
+                                    <!-- Window panes — above all canvases (z-50) -->
+                                    <div class="absolute left-1/2 top-0 bottom-0 w-2 -translate-x-1/2 z-[50] pointer-events-none window-pane transition-colors duration-1000"></div>
+                                    <div class="absolute top-1/2 left-0 right-0 h-2 -translate-y-1/2 z-[50] pointer-events-none window-pane transition-colors duration-1000 mt-4"></div>
+                                    <div class="absolute inset-2 border-2 z-[50] pointer-events-none window-pane-border transition-colors duration-1000"></div>
+
+                                    <!-- Hint moved outside the glass frame below -->
                                 </div>
 
                                 <!-- Window sill -->
                                 <div class="absolute -bottom-3 left-1/2 -translate-x-1/2 w-[115%] h-5 rounded-md z-40 shadow-xl window-sill transition-colors duration-1000 flex items-start justify-center overflow-hidden">
                                     <div class="w-full h-1 bg-black/5"></div>
                                 </div>
-
                             </div>
+
+                            <!-- ── Interaction hint — appears on window hover ── -->
+                            <div id="win-hint-tag" class="absolute left-0 right-0 flex justify-center pointer-events-none"
+                                 style="bottom:-44px; z-index:60; opacity:0; transition:opacity 0.35s ease, transform 0.35s ease; transform:translateY(4px);">
+                                <div class="journey-tag-card flex items-center gap-3" style="background:rgba(46,58,77,0.88); border-radius:40px; padding:8px 18px; white-space:nowrap;">
+                                    <span style="font-size:13px; line-height:1; opacity:0.75;">💧</span>
+                                    <span class="journey-tag-value" style="color:rgba(255,253,208,0.72); font-size:10px; font-weight:400; letter-spacing:0.06em;">click for ripple &nbsp;·&nbsp; double-click for rain</span>
+                                    <span style="font-size:13px; line-height:1; opacity:0.75;">🌧</span>
+                                </div>
+                            </div>
+
+                            <!-- ── Time-of-day scrubber ── -->
+                            <div class="absolute left-0 right-0 flex flex-col items-center gap-1.5" id="win-time-wrap" style="bottom:-90px; z-index:70;">
+                                <div class="w-full px-2 py-2 rounded-2xl win-scrubber-card">
+                                    <div class="flex items-center gap-2 mb-1">
+                                        <span style="font-size:11px;">🌅</span>
+                                        <input id="win-time-slider" type="range" min="0" max="23" value="10"
+                                               class="flex-1 win-slider appearance-none rounded-full cursor-pointer"
+                                               style="height:4px;"
+                                               aria-label="Time of day">
+                                        <span style="font-size:11px;">🌙</span>
+                                    </div>
+                                    <p id="win-time-label" class="win-time-label font-mono text-center" style="font-size:9px; letter-spacing:0.20em; text-transform:uppercase; margin:0;">10 : 00 AM</p>
+                                </div>
+                            </div>
+
+                            <style>
+                                /* Single unified hint card — matches journey-tag-card aesthetic */
+                                .win-hint-chip {
+                                    position: relative;
+                                    overflow: hidden;
+                                    box-shadow: 0 4px 16px rgba(46,58,77,0.10), inset 0 1px 0 rgba(255,255,255,0.55);
+                                    backdrop-filter: blur(10px);
+                                    -webkit-backdrop-filter: blur(10px);
+                                    border: 1px solid rgba(255,255,255,0.42);
+                                    transition: transform 0.25s ease, box-shadow 0.25s ease;
+                                }
+                                /* Grain texture overlay */
+                                .win-hint-chip::after {
+                                    content: '';
+                                    position: absolute;
+                                    inset: 0;
+                                    border-radius: inherit;
+                                    pointer-events: none;
+                                    opacity: 0.32;
+                                    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+                                    background-size: 160px 160px;
+                                    mix-blend-mode: overlay;
+                                }
+                                /* Navy card — matches "Open to" journey tag */
+                                .win-hint-chip--navy {
+                                    background: rgba(46,58,77,0.90);
+                                    border-color: rgba(255,255,255,0.10);
+                                    box-shadow: 0 6px 24px rgba(24,16,50,0.22), inset 0 1px 0 rgba(255,255,255,0.08);
+                                }
+                                .win-hint-chip--navy .win-hint-chip-label { color: rgba(255,253,208,0.45); }
+                                .win-hint-chip--navy .win-hint-chip-text  { color: rgba(255,253,208,0.90); }
+                                /* Dark mode */
+                                body.lights-off .win-hint-chip--navy {
+                                    background: rgba(255,253,208,0.10);
+                                    border-color: rgba(255,253,208,0.16);
+                                }
+                                body.lights-off .win-hint-chip--navy .win-hint-chip-label { color: rgba(255,253,208,0.40); }
+                                body.lights-off .win-hint-chip--navy .win-hint-chip-text  { color: rgba(255,253,208,0.75); }
+                                /* Scrubber card */
+                                .win-scrubber-card {
+                                    background: rgba(46,58,77,0.06);
+                                    border: 1px solid rgba(46,58,77,0.10);
+                                    backdrop-filter: blur(8px);
+                                    -webkit-backdrop-filter: blur(8px);
+                                }
+                                .win-time-label { color: rgba(46,58,77,0.55); }
+                                body.lights-off .win-scrubber-card {
+                                    background: rgba(255,253,208,0.07) !important;
+                                    border-color: rgba(255,253,208,0.14) !important;
+                                }
+                                body.lights-off .win-time-label { color: rgba(255,253,208,0.80) !important; }
+                                /* Slider */
+                                .win-slider { accent-color: #2E3A4D; }
+                                .win-slider::-webkit-slider-runnable-track {
+                                    height:4px; border-radius:2px;
+                                    background:linear-gradient(to right,#d4bc6a,#2E3A4D);
+                                }
+                                .win-slider::-webkit-slider-thumb {
+                                    -webkit-appearance:none;
+                                    width:14px; height:14px; border-radius:50%;
+                                    background:#2E3A4D; border:2px solid white;
+                                    box-shadow:0 1px 4px rgba(0,0,0,0.18);
+                                    margin-top:-5px; cursor:pointer;
+                                }
+                                body.lights-off .win-slider { accent-color:#FFFDD0; }
+                                body.lights-off .win-slider::-webkit-slider-runnable-track {
+                                    background:linear-gradient(to right,#FFFDD0,#d4bc6a);
+                                }
+                                body.lights-off .win-slider::-webkit-slider-thumb {
+                                    background:#FFFDD0; border-color:#2E3A4D;
+                                }
+                            </style>
                         </div>
                     </div>
 
@@ -1693,7 +2079,7 @@
                             <div class="polaroid-face flex flex-col">
                                 <div class="washi-tape" style="transform: translateX(-50%) rotate(3deg); background-color: rgba(252,235,235,0.8);"></div>
                                 <div class="polaroid-img-placeholder flex-grow">
-                                    <img src="https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?q=80&w=800&auto=format&fit=crop" class="w-full h-full object-cover" alt="City Gallery Campaign" loading="lazy" decoding="async">
+                                    <img src="https://raw.githubusercontent.com/cymn-lab/photo-lab/main/Portfolio%20website%20cover%20pic/Portfolio%20website%20cover%20pic_City%20Gallery.jpg" class="w-full h-full object-cover" alt="City Gallery Campaign" loading="lazy" decoding="async">
                                 </div>
                                 <div class="mt-4 text-center font-mono text-sm font-bold text-navy">City Gallery Campaign</div>
                             </div>
@@ -1702,7 +2088,7 @@
                                 <p class="text-sm mb-6 text-navy/80 font-serif italic">Promotional campaign for City Gallery's 25th Anniversary of HKSAR celebration.</p>
                                 <button class="view-details-btn bg-navy text-butter px-6 py-2 rounded-full text-xs font-mono uppercase tracking-widest hover:opacity-80 transition-opacity"
                                     data-title="City Gallery Campaign"
-                                    data-image="https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?q=80&w=1200&auto=format&fit=crop"
+                                    data-image="https://raw.githubusercontent.com/cymn-lab/photo-lab/main/Portfolio%20website%20cover%20pic/Portfolio%20website%20cover%20pic_City%20Gallery.jpg"
                                     data-desc="During my internship at City Gallery — a government-run public gallery in Central, Hong Kong — I contributed to social media posts celebrating the 25th Anniversary of HKSAR. I wrote captions in Traditional Chinese and participated in visual design for Instagram and Facebook, covering exhibition highlights, heritage storytelling, event promotions, and short-form video posts."
                                     data-role="Social Media Copywriting & Design"
                                     data-tag="Internship">
@@ -1820,17 +2206,17 @@
                             <div class="polaroid-face flex flex-col">
                                 <div class="washi-tape" style="transform: translateX(-50%) rotate(-2deg); background-color: rgba(255,200,124,0.7);"></div>
                                 <div class="polaroid-img-placeholder flex-grow">
-                                    <img src="https://images.unsplash.com/photo-1561070791-2526d30994b5?q=80&w=800&auto=format&fit=crop" class="w-full h-full object-cover" alt="AGO Digital Marketing" loading="lazy" decoding="async">
+                                    <img src="https://raw.githubusercontent.com/cymn-lab/photo-lab/main/Portfolio%20website%20cover%20pic/Portfolio%20website%20cover%20pic_AGO.jpg" class="w-full h-full object-cover" alt="AGO Digital Marketing" loading="lazy" decoding="async">
                                 </div>
                                 <div class="mt-4 text-center font-mono text-sm font-bold text-navy">AGO Digital Marketing</div>
                             </div>
                             <div class="polaroid-back">
                                 <h3 class="font-bold text-xl mb-3 text-navy">AGO Digital Marketing Plan</h3>
-                                <p class="text-sm mb-6 text-navy/80 font-serif italic">Comprehensive digital strategy for the Art Gallery of Ontario.</p>
+                                <p class="text-sm mb-6 text-navy/80 font-serif italic">Turning free visitors into lifelong members — a full digital marketing plan for the Art Gallery of Ontario.</p>
                                 <button class="view-details-btn bg-navy text-butter px-6 py-2 rounded-full text-xs font-mono uppercase tracking-widest hover:opacity-80 transition-opacity"
                                     data-title="AGO Digital Marketing Plan"
-                                    data-image="https://images.unsplash.com/photo-1561070791-2526d30994b5?q=80&w=1200&auto=format&fit=crop"
-                                    data-desc="Campaign: 'Discover a Palette of Peace at AGO'. Objectives: 15% increase in conversion rate from free to paid passholders + 20% increase in email open rates. Target: Health-conscious, educated 25-27 year-olds in Greater Toronto Area. Tactics: Video ads, influencer partnerships, paid social advertising, and OOH digital programmatic."
+                                    data-image="https://raw.githubusercontent.com/cymn-lab/photo-lab/main/Portfolio%20website%20cover%20pic/Portfolio%20website%20cover%20pic_AGO.jpg"
+                                    data-desc="A digital marketing plan for the Art Gallery of Ontario, built around the campaign concept 'Discover a Palette of Peace at AGO'. Targeting health-conscious, culturally curious 25–27 year-olds in the Greater Toronto Area, the strategy combines video ads, influencer partnerships, paid social, and OOH digital programmatic — positioning the AGO as an urban sanctuary and converting free visitors into paid members."
                                     data-role="Digital Marketing Strategy"
                                     data-tag="School Project"
                                     data-link="https://drive.google.com/file/d/1xe6yAqHipMCkcTYxX5OFK30GupWxUYAd/view?usp=sharing">
@@ -1922,7 +2308,7 @@
                             <div class="polaroid-face flex flex-col">
                                 <div class="washi-tape" style="transform: translateX(-50%) rotate(2deg); background-color: rgba(255,253,208,0.8);"></div>
                                 <div class="polaroid-img-placeholder flex-grow">
-                                    <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=800&auto=format&fit=crop" class="w-full h-full object-cover" alt="Hakuna Matata" loading="lazy" decoding="async">
+                                    <img src="https://raw.githubusercontent.com/cymn-lab/photo-lab/main/Portfolio%20website%20cover%20pic/Portfolio%20website%20cover%20pic_Disney.jpg" class="w-full h-full object-cover" alt="Hakuna Matata" loading="lazy" decoding="async">
                                 </div>
                                 <div class="mt-4 text-center font-mono text-sm font-bold text-navy">Hakuna Matata Campaign</div>
                             </div>
@@ -1931,7 +2317,7 @@
                                 <p class="text-sm mb-6 text-navy/80 font-serif italic">Rekindling the magic from within—a heartfelt initiative for the hearts that bring joy to millions.</p>
                                 <button class="view-details-btn bg-navy text-butter px-6 py-2 rounded-full text-xs font-mono uppercase tracking-widest hover:opacity-80 transition-opacity"
                                     data-title="Hakuna Matata: HK Disneyland Campaign"
-                                    data-image="https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=1200&auto=format&fit=crop"
+                                    data-image="https://raw.githubusercontent.com/cymn-lab/photo-lab/main/Portfolio%20website%20cover%20pic/Portfolio%20website%20cover%20pic_Disney.jpg"
                                     data-desc="Behind the enchanting gates of Hong Kong Disneyland, a quiet magic needed rekindling. The 'Hakuna Matata' initiative emerged as a beacon of care, a strategic internal communications proposal crafted to revitalize the spirit of our frontline 'Cast Members.' Recognizing the strains of high turnover and burnout, this campaign tenderly shifts focus towards holistic employee well-being. Through a three-phased approach—offering digital self-care tools for mental health, cross-training programs for career growth, and purpose-driven appreciation events—we aimed to transform the internal culture. This wasn't just a strategy; it was a promise to nurture the very hearts that bring joy to millions, ensuring that the magic flourishes from the inside out, creating a sustainable engine for growth where every Cast Member feels valued, supported, and truly part of the dream."
                                     data-role="Internal Communications & Campaign Strategy"
                                     data-tag="Marketing Campaign"
@@ -1948,7 +2334,7 @@
                             <div class="polaroid-face flex flex-col">
                                 <div class="washi-tape" style="transform: translateX(-50%) rotate(-2deg); background-color: rgba(252,235,235,0.85);"></div>
                                 <div class="polaroid-img-placeholder flex-grow">
-                                    <img src="https://images.unsplash.com/photo-1596462502278-27bfdc403348?q=80&w=800&auto=format&fit=crop" class="w-full h-full object-cover" alt="Florence by Mills" loading="lazy" decoding="async">
+                                    <img src="https://raw.githubusercontent.com/cymn-lab/photo-lab/main/Portfolio%20website%20cover%20pic/Portfolio%20website%20cover%20pic_Florence%20by%20Mills.jpg" class="w-full h-full object-cover" alt="Florence by Mills" loading="lazy" decoding="async">
                                 </div>
                                 <div class="mt-4 text-center font-mono text-sm font-bold text-navy">Florence by Mills</div>
                             </div>
@@ -1957,7 +2343,7 @@
                                 <p class="text-sm mb-6 text-navy/80 font-serif italic">Decoding the brand DNA behind Millie Bobby Brown's Gen-Z clean beauty line.</p>
                                 <button class="view-details-btn bg-navy text-butter px-6 py-2 rounded-full text-xs font-mono uppercase tracking-widest hover:opacity-80 transition-opacity"
                                     data-title="Florence by Mills — Brand Show & Tell"
-                                    data-image="https://images.unsplash.com/photo-1596462502278-27bfdc403348?q=80&w=1200&auto=format&fit=crop"
+                                    data-image="https://raw.githubusercontent.com/cymn-lab/photo-lab/main/Portfolio%20website%20cover%20pic/Portfolio%20website%20cover%20pic_Florence%20by%20Mills.jpg"
                                     data-desc="A Brand Show & Tell presentation that unpacks Florence by Mills, the clean beauty brand co-founded by Millie Bobby Brown. The project explores how the brand speaks directly to Gen-Z through radical authenticity, skin-positive messaging, and a visual identity that feels more like a friend's bedroom than a beauty counter. The analysis covers brand positioning, tone of voice, visual language, target audience segmentation, and competitive landscape — examining how Florence by Mills carved a credible niche in an oversaturated market by leading with values over vanity."
                                     data-role="Brand Strategy & Presentation"
                                     data-tag="School Project"
@@ -1974,7 +2360,7 @@
                             <div class="polaroid-face flex flex-col">
                                 <div class="washi-tape" style="transform: translateX(-50%) rotate(1deg); background-color: rgba(200,200,200,0.75);"></div>
                                 <div class="polaroid-img-placeholder flex-grow">
-                                    <img src="https://images.unsplash.com/photo-1558769132-cb1aea458c5e?q=80&w=800&auto=format&fit=crop" class="w-full h-full object-cover" alt="Uniqlo Audit" loading="lazy" decoding="async">
+                                    <img src="https://raw.githubusercontent.com/cymn-lab/photo-lab/main/Portfolio%20website%20cover%20pic/Portfolio%20website%20cover%20pic_Uniqlo.jpg" class="w-full h-full object-cover" alt="Uniqlo Audit" loading="lazy" decoding="async">
                                 </div>
                                 <div class="mt-4 text-center font-mono text-sm font-bold text-navy">Uniqlo Audit</div>
                             </div>
@@ -1983,7 +2369,7 @@
                                 <p class="text-sm mb-6 text-navy/80 font-serif italic">A strategic audit uncovering gaps, opportunities, and a roadmap for Uniqlo's social growth.</p>
                                 <button class="view-details-btn bg-navy text-butter px-6 py-2 rounded-full text-xs font-mono uppercase tracking-widest hover:opacity-80 transition-opacity"
                                     data-title="Uniqlo — Social Media Marketing Audit"
-                                    data-image="https://images.unsplash.com/photo-1558769132-cb1aea458c5e?q=80&w=1200&auto=format&fit=crop"
+                                    data-image="https://raw.githubusercontent.com/cymn-lab/photo-lab/main/Portfolio%20website%20cover%20pic/Portfolio%20website%20cover%20pic_Uniqlo.jpg"
                                     data-desc="A comprehensive Social Media Marketing Audit examining Uniqlo's digital presence across key platforms. The project analyses content strategy, posting cadence, audience engagement, tone of voice, and competitive positioning against peers in the accessible fashion space. The audit identifies where Uniqlo's social storytelling succeeds and where opportunities exist to deepen community engagement and localise content for different markets."
                                     data-role="Social Media Strategy & Audit"
                                     data-tag="School Project"
@@ -2003,7 +2389,201 @@
             <div class="text-center mb-12" data-motion="fade-up">
                 <p class="font-mono text-xs uppercase tracking-widest text-navy/50 mb-4">✦ An invitation ✦</p>
                 <h2 class="text-3xl md:text-4xl font-bold mb-3 text-navy">The Blue Hour Note</h2>
-                <p class="font-serif italic text-lg text-navy/70">Leave a trace of your stay while the rest of the world is still asleep</p>
+
+                <!-- Stardust quote — each word reveals on hover with particle burst -->
+                <p id="stardust-quote" class="font-serif italic text-lg text-navy/70 select-none cursor-default"
+                   style="position:relative; display:inline-block; line-height:1.8;">
+                    <!-- Words injected by JS below, each wrapped in a span -->
+                    <span class="sq-word" style="--i:0">Leave</span>
+                    <span class="sq-space"> </span>
+                    <span class="sq-word" style="--i:1">a</span>
+                    <span class="sq-space"> </span>
+                    <span class="sq-word" style="--i:2">trace</span>
+                    <span class="sq-space"> </span>
+                    <span class="sq-word" style="--i:3">of</span>
+                    <span class="sq-space"> </span>
+                    <span class="sq-word" style="--i:4">your</span>
+                    <span class="sq-space"> </span>
+                    <span class="sq-word" style="--i:5">stay</span>
+                    <span class="sq-space"> </span>
+                    <span class="sq-word" style="--i:6">while</span>
+                    <span class="sq-space"> </span>
+                    <span class="sq-word" style="--i:7">the</span>
+                    <span class="sq-space"> </span>
+                    <span class="sq-word" style="--i:8">rest</span>
+                    <span class="sq-space"> </span>
+                    <span class="sq-word" style="--i:9">of</span>
+                    <span class="sq-space"> </span>
+                    <span class="sq-word" style="--i:10">the</span>
+                    <span class="sq-space"> </span>
+                    <span class="sq-word" style="--i:11">world</span>
+                    <span class="sq-space"> </span>
+                    <span class="sq-word" style="--i:12">is</span>
+                    <span class="sq-space"> </span>
+                    <span class="sq-word" style="--i:13">still</span>
+                    <span class="sq-space"> </span>
+                    <span class="sq-word" style="--i:14">asleep</span>
+                </p>
+
+                <style>
+                    /* ── Stardust quote words ── */
+                    .sq-word {
+                        display: inline-block;
+                        position: relative;
+                        cursor: crosshair;
+                        color: transparent;
+                        transition: color 0.45s cubic-bezier(0.22,1,0.36,1), text-shadow 0.45s ease, transform 0.35s cubic-bezier(0.22,1,0.36,1);
+                        animation: sqBreath 6s ease-in-out infinite;
+                        animation-delay: calc(var(--i) * 0.22s);
+                        transform-origin: center bottom;
+                    }
+                    .sq-word::before {
+                        content: attr(data-word);
+                        position: absolute; inset: 0;
+                        color: rgba(46,58,77,0.22);
+                        filter: blur(3px);
+                        transition: filter 0.5s ease, opacity 0.5s ease;
+                        pointer-events: none;
+                    }
+                    .sq-word.revealed {
+                        color: rgba(46,58,77,0.82);
+                        text-shadow: 0 0 18px rgba(212,188,106,0.55), 0 0 40px rgba(212,188,106,0.22);
+                        transform: translateY(-2px);
+                    }
+                    .sq-word.revealed::before { filter: blur(0); opacity: 0; }
+                    .sq-word:hover {
+                        color: rgba(46,58,77,0.95) !important;
+                        text-shadow: 0 0 12px rgba(212,188,106,0.80), 0 0 28px rgba(212,188,106,0.45), 0 0 60px rgba(212,188,106,0.18) !important;
+                        transform: translateY(-3px) scale(1.04) !important;
+                    }
+                    @keyframes sqBreath { 0%,100%{filter:blur(2.5px) brightness(0.9)} 50%{filter:blur(2px) brightness(1.05)} }
+                    .sq-word.revealed { animation: sqBreathRevealed 4s ease-in-out infinite; animation-delay: calc(var(--i) * 0.18s); }
+                    @keyframes sqBreathRevealed {
+                        0%,100%{text-shadow:0 0 14px rgba(212,188,106,0.45),0 0 32px rgba(212,188,106,0.18)}
+                        50%    {text-shadow:0 0 22px rgba(212,188,106,0.68),0 0 50px rgba(212,188,106,0.30)}
+                    }
+                    body.lights-off .sq-word::before      { color: rgba(255,253,208,0.18); }
+                    body.lights-off .sq-word.revealed     { color: rgba(255,253,208,0.90); }
+                    body.lights-off .sq-word:hover,
+                    body.lights-off .sq-word.revealed     { text-shadow: 0 0 16px rgba(212,188,106,0.85), 0 0 40px rgba(212,188,106,0.40) !important; }
+                    body.lights-off #stardust-quote       { color: rgba(255,253,208,0.18); }
+                    .sq-space { white-space: pre; }
+                </style>
+
+                <!-- Stardust particles rendered into a body-level canvas (created by JS) -->
+
+                <script>
+                (function() {
+                    /* ── Create canvas at body level — avoids stacking context trap from
+                       parent section's transform/z-index ── */
+                    var canvas = document.createElement('canvas');
+                    canvas.id  = 'stardust-canvas';
+                    canvas.setAttribute('aria-hidden', 'true');
+                    canvas.style.cssText = 'position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:9998;opacity:0;transition:opacity 0.3s ease;';
+                    document.body.appendChild(canvas);
+
+                    var ctx       = canvas.getContext('2d');
+                    var particles = [];
+                    var rafId     = null;
+                    var active    = false;
+
+                    function resize() {
+                        var dpr = window.devicePixelRatio || 1;
+                        canvas.width  = window.innerWidth  * dpr;
+                        canvas.height = window.innerHeight * dpr;
+                        ctx.scale(dpr, dpr);
+                    }
+                    resize();
+                    window.addEventListener('resize', function(){ resize(); }, { passive: true });
+
+                    /* Particle constructor */
+                    function Particle(x, y) {
+                        this.x     = x;
+                        this.y     = y;
+                        this.vx    = (Math.random() - 0.5) * 3.5;
+                        this.vy    = (Math.random() - 0.5) * 3.5 - 1.2;
+                        this.life  = 1.0;
+                        this.decay = 0.018 + Math.random() * 0.022;
+                        this.size  = 1.5 + Math.random() * 3.5;
+                        this.hue   = 38 + Math.random() * 28;
+                        this.shape = Math.random() < 0.5 ? 'star' : 'circle';
+                    }
+                    Particle.prototype.update = function() {
+                        this.x   += this.vx;
+                        this.y   += this.vy;
+                        this.vy  += 0.06;
+                        this.life -= this.decay;
+                    };
+                    Particle.prototype.draw = function() {
+                        ctx.save();
+                        ctx.globalAlpha = Math.max(0, this.life);
+                        var isDark = document.body.classList.contains('lights-off');
+                        ctx.fillStyle   = 'hsl(' + this.hue + ',' + (isDark?'90%':'75%') + ',' + (isDark?'70%':'58%') + ')';
+                        ctx.shadowColor = 'hsl(' + this.hue + ',85%,72%)';
+                        ctx.shadowBlur  = 6;
+                        ctx.translate(this.x, this.y);
+                        if (this.shape === 'star') {
+                            var s = this.size;
+                            ctx.beginPath();
+                            ctx.moveTo(0,-s*1.6); ctx.lineTo(s*0.4,-s*0.4); ctx.lineTo(s*1.6,0);
+                            ctx.lineTo(s*0.4,s*0.4); ctx.lineTo(0,s*1.6); ctx.lineTo(-s*0.4,s*0.4);
+                            ctx.lineTo(-s*1.6,0); ctx.lineTo(-s*0.4,-s*0.4); ctx.closePath();
+                            ctx.fill();
+                        } else {
+                            ctx.beginPath();
+                            ctx.arc(0, 0, this.size, 0, Math.PI * 2);
+                            ctx.fill();
+                        }
+                        ctx.restore();
+                    };
+
+                    function burst(x, y, count) {
+                        for (var i = 0; i < count; i++) particles.push(new Particle(x, y));
+                        if (!active) startLoop();
+                    }
+                    function startLoop() {
+                        active = true;
+                        canvas.style.opacity = '1';
+                        loop();
+                    }
+                    function loop() {
+                        /* Clear using CSS pixels — ctx is scaled by dpr */
+                        ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+                        particles = particles.filter(function(p){ return p.life > 0; });
+                        particles.forEach(function(p){ p.update(); p.draw(); });
+                        if (particles.length > 0) {
+                            rafId = requestAnimationFrame(loop);
+                        } else {
+                            active = false;
+                            canvas.style.opacity = '0';
+                        }
+                    }
+
+                    /* ── Wire up each word ── */
+                    document.querySelectorAll('.sq-word').forEach(function(word) {
+                        word.setAttribute('data-word', word.textContent.trim());
+
+                        word.addEventListener('mouseenter', function(e) {
+                            word.classList.add('revealed');
+                            var r  = word.getBoundingClientRect();
+                            burst(r.left + r.width / 2, r.top + r.height / 2, 14);
+                        });
+                        word.addEventListener('mousemove', function(e) {
+                            if (Math.random() < 0.4) burst(e.clientX, e.clientY, 3);
+                        });
+                    });
+
+                    /* Mobile: tap whole quote to reveal all */
+                    var quote = document.getElementById('stardust-quote');
+                    quote && quote.addEventListener('click', function() {
+                        document.querySelectorAll('.sq-word').forEach(function(w){ w.classList.add('revealed'); });
+                        var r = quote.getBoundingClientRect();
+                        for (var i = 0; i < 5; i++) {
+                            burst(r.left + Math.random() * r.width, r.top + r.height / 2, 8);
+                        }
+                    });
+                })();
+                </script>
             </div>
 
             <!-- Interactive Flipping Book -->
@@ -2520,43 +3100,287 @@
             navObserver.observe(section);
         });
 
-        // ── About: Window 3D tilt on mousemove ───────────────────────
+        // ── About: Window — full interactive suite ───────────────────
         (function () {
-            const win   = document.getElementById('about-window');
-            const inner = win && win.querySelector('.window-tilt-inner');
-            if (!win || !inner) return;
+            const win    = document.getElementById('about-window');
+            const inner  = win && win.querySelector('.window-tilt-inner');
+            const glass  = document.getElementById('win-glass');
+            if (!win || !inner || !glass) return;
 
+            // ── 1. 3D TILT (existing, preserved) ──
             const MAX_DEG = 6;
-            let rafId = null;
-            let targetX = 0, targetY = 0, currentX = 0, currentY = 0;
-
-            win.addEventListener('mousemove', (e) => {
+            let tRafId = null, tx = 0, ty = 0, cx = 0, cy = 0;
+            glass.addEventListener('mousemove', (e) => {
                 const r  = win.getBoundingClientRect();
-                const nx = (e.clientX - r.left)  / r.width  - 0.5; // -0.5..0.5
-                const ny = (e.clientY - r.top)   / r.height - 0.5;
-                targetX =  ny * MAX_DEG;   // tilt up/down  → rotateX
-                targetY = -nx * MAX_DEG;   // tilt left/right → rotateY
-                if (!rafId) rafId = requestAnimationFrame(animateTilt);
+                const nx = (e.clientX - r.left) / r.width  - 0.5;
+                const ny = (e.clientY - r.top)  / r.height - 0.5;
+                tx =  ny * MAX_DEG; ty = -nx * MAX_DEG;
+                if (!tRafId) tRafId = requestAnimationFrame(tiltLoop);
             });
-
-            win.addEventListener('mouseleave', () => {
-                targetX = 0; targetY = 0;
-                if (!rafId) rafId = requestAnimationFrame(animateTilt);
+            glass.addEventListener('mouseleave', () => {
+                tx = 0; ty = 0;
+                if (!tRafId) tRafId = requestAnimationFrame(tiltLoop);
             });
-
-            function animateTilt() {
-                currentX += (targetX - currentX) * 0.12;
-                currentY += (targetY - currentY) * 0.12;
-                inner.style.transform =
-                    `rotateX(${currentX.toFixed(3)}deg) rotateY(${currentY.toFixed(3)}deg)`;
-                if (Math.abs(targetX - currentX) > 0.02 || Math.abs(targetY - currentY) > 0.02) {
-                    rafId = requestAnimationFrame(animateTilt);
-                } else {
-                    inner.style.transform =
-                        `rotateX(${targetX}deg) rotateY(${targetY}deg)`;
-                    rafId = null;
-                }
+            function tiltLoop() {
+                cx += (tx - cx) * 0.12; cy += (ty - cy) * 0.12;
+                inner.style.transform = `rotateX(${cx.toFixed(3)}deg) rotateY(${cy.toFixed(3)}deg)`;
+                const done = Math.abs(tx-cx) < 0.02 && Math.abs(ty-cy) < 0.02;
+                tRafId = done ? (inner.style.transform=`rotateX(${tx}deg) rotateY(${ty}deg)`, null) : requestAnimationFrame(tiltLoop);
             }
+
+            // ── 2. CURTAIN FLUTTER on hover ──
+            const curtL    = document.getElementById('win-curtain-l');
+            const curtR    = document.getElementById('win-curtain-r');
+            const hintTag  = document.getElementById('win-hint-tag');
+            glass.addEventListener('mouseenter', () => {
+                if (curtL) curtL.style.transform = 'skewY(-4deg) translateX(-3px)';
+                if (curtR) curtR.style.transform = 'skewY(4deg) translateX(3px)';
+                if (hintTag) { hintTag.style.opacity = '1'; hintTag.style.transform = 'translateY(0)'; }
+            });
+            glass.addEventListener('mouseleave', () => {
+                if (curtL) curtL.style.transform = '';
+                if (curtR) curtR.style.transform = '';
+                if (hintTag) { hintTag.style.opacity = '0'; hintTag.style.transform = 'translateY(4px)'; }
+            });
+
+            // ── 3. HINT — always visible below sill (no JS needed) ──
+
+            // ── 4. TIME-OF-DAY SCRUBBER ──
+            const slider    = document.getElementById('win-time-slider');
+            const timeLabel = document.getElementById('win-time-label');
+            const sky       = document.getElementById('win-sky');
+            const sun       = document.getElementById('win-sun');
+            const moon      = document.getElementById('win-moon');
+            const stars     = win.querySelector('.scenery-stars');
+            const clouds    = win.querySelectorAll('.win-cloud');
+            const hillBack  = win.querySelector('.win-hill-back');
+            const hillFront = win.querySelector('.win-hill-front');
+            const ground    = win.querySelector('.win-ground');
+            const trees     = win.querySelectorAll('.win-tree');
+
+            const SKY_COLORS = {
+                // hour → [skyGrad top, skyGrad bottom, hillBack, hillFront]
+                0:  ['#0a0820','#0d0c28', '#1a1636','#12102a'],
+                4:  ['#0a0820','#0d0c28', '#1a1636','#12102a'],
+                5:  ['#2d1b4e','#6b3fa0', '#3a2060','#2a1848'],
+                6:  ['#ff7043','#ffb74d', '#4a7c59','#2d5a3d'],
+                7:  ['#64b5f6','#e1f5fe', '#5a8a4a','#3a6a30'],
+                8:  ['#42a5f5','#e3f2fd', '#5a8a4a','#3a6a30'],
+                10: ['#2196f3','#e3f2fd', '#5a8a4a','#3a6a30'],
+                12: ['#1e88e5','#e3f2fd', '#5a8a4a','#3a6a30'],
+                16: ['#42a5f5','#e3f2fd', '#5a8a4a','#3a6a30'],
+                17: ['#ef6c00','#ffcc02', '#4a5a30','#2a3a20'],
+                18: ['#bf360c','#ff8f00', '#3a4a28','#22321a'],
+                19: ['#4a148c','#7b1fa2', '#2a2040','#1a1430'],
+                20: ['#1a1230','#0d0c28', '#1a1636','#12102a'],
+                23: ['#0a0820','#0d0c28', '#1a1636','#12102a'],
+            };
+            function lerpColor(a, b, t) {
+                const ah = parseInt(a.slice(1),16), bh = parseInt(b.slice(1),16);
+                const ar=[ah>>16&255,ah>>8&255,ah&255], br=[bh>>16&255,bh>>8&255,bh&255];
+                const r = ar.map((v,i) => Math.round(v + (br[i]-v)*t));
+                return `rgb(${r.join(',')})`;
+            }
+            function getSkyAt(h) {
+                const hours = Object.keys(SKY_COLORS).map(Number).sort((a,b)=>a-b);
+                let lo=hours[0], hi=hours[hours.length-1];
+                for (let i=0; i<hours.length-1; i++) { if (h>=hours[i]&&h<=hours[i+1]){lo=hours[i];hi=hours[i+1];break;} }
+                const t = hi===lo ? 0 : (h-lo)/(hi-lo);
+                const a=SKY_COLORS[lo], b=SKY_COLORS[hi];
+                return [lerpColor(a[0],b[0],t),lerpColor(a[1],b[1],t),lerpColor(a[2],b[2],t),lerpColor(a[3],b[3],t)];
+            }
+
+            function applyHour(h) {
+                const [st,sb,hb,hf] = getSkyAt(h);
+                if (sky) sky.style.background = `linear-gradient(to bottom, ${st}, ${sb})`;
+                if (hillBack)  hillBack.style.background  = `linear-gradient(to bottom, ${hb}, ${hb}cc)`;
+                if (hillFront) hillFront.style.background = `linear-gradient(to bottom, ${hf}, ${hf}cc)`;
+                // Ground and trees darken at night
+                const isNight = h<=5||h>=19;
+                if (ground) ground.style.background = isNight
+                    ? 'linear-gradient(to bottom,#152210,#0a1608)'
+                    : 'linear-gradient(to bottom,#6aaa50,#4a8835)';
+                trees.forEach(t => { t.style.background = isNight ? '#0a1006' : '#2d5218'; });
+
+                // Sun arc: rises at 6, peaks at 12, sets at 18
+                const sunT = Math.max(0, Math.min(1, (h-6)/12));
+                const sunY = 80 - Math.sin(sunT*Math.PI)*55; // % from top
+                const sunVisible = h>=5 && h<=19;
+                if (sun) {
+                    // Keep sun hidden if it's raining, regardless of time
+                    const isRaining = glass.dataset.raining === '1';
+                    sun.style.opacity    = (sunVisible && !isRaining) ? '1' : '0';
+                    sun.style.top        = sunY + '%';
+                    sun.style.left       = (20 + sunT*60) + '%';
+                    sun.style.transform  = 'translate(-50%,-50%)';
+                    // Dawn/dusk tint
+                    const isDusk = h<=7 || h>=17;
+                    sun.style.background = isDusk
+                        ? 'linear-gradient(to top right, #ff7043, #ffb74d)'
+                        : 'linear-gradient(to top right, #fdd835, #fff59d)';
+                    sun.style.boxShadow  = isDusk
+                        ? '0 0 40px rgba(255,112,67,0.70)'
+                        : '0 0 40px rgba(253,224,71,0.60)';
+                }
+                // Moon arc: rises at 19, peaks at 0, sets at 5
+                const moonVisible = h>=19 || h<=5;
+                const moonT = h>=19 ? (h-19)/10 : (h+5)/10;
+                if (moon) {
+                    moon.style.opacity   = moonVisible ? '1' : '0';
+                    moon.style.top       = (30 - Math.sin(moonT*Math.PI)*25) + '%';
+                    moon.style.left      = (15 + moonT*70) + '%';
+                    moon.style.transform = 'translate(-50%,-50%)';
+                }
+                // Stars
+                if (stars) stars.style.opacity = (h<=5||h>=19) ? '1' : h>=18?'0.5':'0';
+                // Clouds
+                clouds.forEach(c => { c.style.opacity = (h>=7&&h<=18) ? '0.85' : '0.15'; });
+                // Fireflies (night only)
+                const ffCanvas = document.getElementById('win-firefly-canvas');
+                if (ffCanvas) ffCanvas.style.opacity = (h<=5||h>=19) ? '0.85' : '0';
+
+                // Label
+                const ampm = h < 12 ? 'AM' : 'PM';
+                const display = h % 12 === 0 ? 12 : h % 12;
+                if (timeLabel) timeLabel.textContent = `${String(display).padStart(2,'0')} : 00 ${ampm}`;
+
+                // Auto dark/light mode — night hours (7pm–5am) → lights off
+                const shouldBeDark = h >= 19 || h <= 5;
+                document.body.classList.toggle('lights-off', shouldBeDark);
+                document.documentElement.classList.toggle('lights-off', shouldBeDark);
+                // Sync the light switch toggle state
+                const switchToggle = document.getElementById('switch-toggle');
+                if (switchToggle) switchToggle.checked = shouldBeDark;
+            }
+
+            if (slider) {
+                slider.addEventListener('input', () => applyHour(+slider.value));
+                applyHour(+slider.value);
+            }
+
+            // ── 5. RAIN SYSTEM ──
+            const rainCanvas  = document.getElementById('win-rain-canvas');
+            const rainCtx     = rainCanvas && rainCanvas.getContext('2d');
+            const gloomyOv    = document.getElementById('win-gloomy');
+            let raining = false, rainRaf = null, rainDrops = [];
+            function initRain() {
+                rainCanvas.width  = rainCanvas.offsetWidth;
+                rainCanvas.height = rainCanvas.offsetHeight;
+                rainDrops = Array.from({length:80}, () => ({
+                    x: Math.random()*rainCanvas.width,
+                    y: Math.random()*rainCanvas.height,
+                    l: 8 + Math.random()*10,
+                    s: 3 + Math.random()*4,
+                    o: 0.3 + Math.random()*0.5,
+                }));
+            }
+            function rainLoop() {
+                rainCtx.clearRect(0,0,rainCanvas.width,rainCanvas.height);
+                rainCtx.strokeStyle = 'rgba(180,210,255,0.6)';
+                rainCtx.lineWidth   = 1;
+                rainDrops.forEach(d => {
+                    rainCtx.globalAlpha = d.o;
+                    rainCtx.beginPath();
+                    rainCtx.moveTo(d.x, d.y);
+                    rainCtx.lineTo(d.x - d.l*0.2, d.y + d.l);
+                    rainCtx.stroke();
+                    d.y += d.s; d.x -= d.s*0.2;
+                    if (d.y > rainCanvas.height) { d.y = -d.l; d.x = Math.random()*rainCanvas.width; }
+                });
+                if (raining) rainRaf = requestAnimationFrame(rainLoop);
+                else { rainCtx.clearRect(0,0,rainCanvas.width,rainCanvas.height); rainCanvas.style.opacity='0'; }
+            }
+            glass.addEventListener('click', (e) => {
+                // Single click = ripple only
+                spawnRipple(e);
+            });
+            glass.addEventListener('dblclick', (e) => {
+                // Double click = toggle rain
+                e.preventDefault();
+                raining = !raining;
+                glass.dataset.raining = raining ? '1' : '0';  // shared state flag
+                const winSun = document.getElementById('win-sun');
+                if (raining) {
+                    initRain();
+                    rainCanvas.style.opacity = '1';
+                    if (gloomyOv) gloomyOv.style.opacity = '1';
+                    if (winSun) { winSun.style.opacity = '0'; winSun.style.transition = 'opacity 0.8s ease, top 1s ease, left 1s ease, transform 1s ease'; }
+                    rainRaf = requestAnimationFrame(rainLoop);
+                } else {
+                    if (rainRaf) { cancelAnimationFrame(rainRaf); rainRaf = null; }
+                    rainCtx.clearRect(0,0,rainCanvas.width,rainCanvas.height);
+                    rainCanvas.style.opacity = '0';
+                    if (gloomyOv) gloomyOv.style.opacity = '0';
+                    if (winSun) winSun.style.opacity = '1';
+                }
+            });
+
+            // ── 6. RIPPLE on click ──
+            const ripCanvas = document.getElementById('win-ripple-canvas');
+            const ripCtx    = ripCanvas && ripCanvas.getContext('2d');
+            let ripples = [], ripRaf = null;
+            function initRipCanvas() {
+                ripCanvas.width  = ripCanvas.offsetWidth;
+                ripCanvas.height = ripCanvas.offsetHeight;
+            }
+            function spawnRipple(e) {
+                const r = glass.getBoundingClientRect();
+                ripples.push({ x: e.clientX-r.left, y: e.clientY-r.top, r:0, maxR:120, o:0.7 });
+                if (!ripRaf) ripRaf = requestAnimationFrame(ripLoop);
+            }
+            function ripLoop() {
+                initRipCanvas();
+                ripCtx.clearRect(0,0,ripCanvas.width,ripCanvas.height);
+                ripples = ripples.filter(rp => rp.o > 0.01);
+                ripples.forEach(rp => {
+                    rp.r  += 4;
+                    rp.o  -= 0.025;
+                    ripCtx.globalAlpha   = Math.max(0, rp.o);
+                    ripCtx.strokeStyle   = 'rgba(255,255,255,0.65)';
+                    ripCtx.lineWidth     = 1.5;
+                    ripCtx.beginPath();
+                    ripCtx.arc(rp.x, rp.y, rp.r, 0, Math.PI*2);
+                    ripCtx.stroke();
+                });
+                ripRaf = ripples.length ? requestAnimationFrame(ripLoop) : null;
+            }
+
+            // ── 8. FIREFLIES (night) ──
+            const ffCanvas = document.getElementById('win-firefly-canvas');
+            const ffCtx    = ffCanvas && ffCanvas.getContext('2d');
+            let fireflies  = [];
+            function initFF() {
+                ffCanvas.width  = ffCanvas.offsetWidth  || 344;
+                ffCanvas.height = ffCanvas.offsetHeight || 280;
+                fireflies = Array.from({length:12}, () => ({
+                    x: 20 + Math.random() * (ffCanvas.width-40),
+                    y: 20 + Math.random() * (ffCanvas.height * 0.7),
+                    vx:(Math.random()-0.5)*0.5, vy:(Math.random()-0.5)*0.5,
+                    life:Math.random(), phase:Math.random()*Math.PI*2,
+                    hue:40+Math.random()*40,
+                }));
+            }
+            function ffLoop() {
+                if (!ffCtx) return;
+                ffCtx.clearRect(0,0,ffCanvas.width,ffCanvas.height);
+                fireflies.forEach(f => {
+                    f.x += f.vx; f.y += f.vy;
+                    f.phase += 0.04;
+                    if (f.x<5||f.x>ffCanvas.width-5)  f.vx *= -1;
+                    if (f.y<5||f.y>ffCanvas.height-5)  f.vy *= -1;
+                    const glow = 0.4 + 0.6 * Math.abs(Math.sin(f.phase));
+                    ffCtx.globalAlpha  = glow * 0.85;
+                    ffCtx.fillStyle    = `hsl(${f.hue},90%,75%)`;
+                    ffCtx.shadowColor  = `hsl(${f.hue},90%,75%)`;
+                    ffCtx.shadowBlur   = 10;
+                    ffCtx.beginPath();
+                    ffCtx.arc(f.x, f.y, 2, 0, Math.PI*2);
+                    ffCtx.fill();
+                });
+                requestAnimationFrame(ffLoop);
+            }
+            initFF(); ffLoop();
+
         })();
 
         // ── About: Magnetic tags ──────────────────────────────────────
@@ -2647,20 +3471,20 @@
     /* ── Projects ── */
     const PROJECTS = [
       {id:1,category:"illustrations",title:"@fibu.draw",shortTitle:"@fibu.draw",tag:"Personal Brand",role:"Illustration",teaser:"Minimalist characters exploring healing & happiness through Procreate.",desc:"My personal illustration brand features cute, minimalist characters (cats, dogs) exploring themes of healing and happiness. Created with Procreate, each piece captures the warmth of daily moments. The collection includes both line art and colored versions, with a growing community on Instagram.",image:"https://raw.githubusercontent.com/cymn-lab/photo-lab/main/Fibu%20draw%20motions/Fibu%20draw%20motion%201.gif",images:[{src:"https://raw.githubusercontent.com/cymn-lab/photo-lab/main/Fibu%20draw%20motions/Fibu%20draw%20motion%201.gif",caption:"healing in small things 🐱"},{src:"https://raw.githubusercontent.com/cymn-lab/photo-lab/main/Fibu%20draw%20motions/Fibu%20draw%20motion%203.gif",caption:"warmth of daily moments 🌿"},{src:"https://raw.githubusercontent.com/cymn-lab/photo-lab/main/Fibu%20draw%20motions/Fibu%20draw%20motion%204.gif",caption:"softness, always 🌸"},{src:"https://raw.githubusercontent.com/cymn-lab/photo-lab/main/Fibu%20draw%20motions/Fibu%20draw%20motion%205.gif",caption:"tiny joys 🐶"},{src:"https://raw.githubusercontent.com/cymn-lab/photo-lab/main/Fibu%20draw%20motions/Fibu%20draw%20motion%206.gif",caption:"made with love, in Procreate 🍊"}],carousel:true,link:"https://www.instagram.com/fibu.draw?igsh=czBnbjQ4dW1ldWZk&utm_source=qr",spineColor:"#8b7fb5",textColor:"#1e1d3a",width:46,height:228,font:"serif"},
-      {id:2,category:"social-media",title:"City Gallery Campaign",shortTitle:"City Gallery",tag:"Internship",role:"Social Media Copywriting & Design",teaser:"25th Anniversary HKSAR campaign — crafting stories for a cultural institution in Traditional Chinese.",desc:"During my internship at City Gallery — a government-run public gallery in Central, Hong Kong — I contributed to a series of social media posts celebrating the 25th Anniversary of the Hong Kong Special Administrative Region. My role spanned both copywriting and visual content: writing captions in Traditional Chinese to reflect the bilingual cultural identity of the gallery and its audience, and participating in the design of post visuals for Instagram and Facebook. The content ranged from exhibition highlights and heritage storytelling to event promotions and short-form video posts, each crafted to deepen community connection with the gallery's programming and the significance of the anniversary milestone.",image:"https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?q=80&w=1200&auto=format&fit=crop",posts:[{label:"Post 1 — Photo Post",url:"https://www.instagram.com/p/ChZQ78BAvmo/?igsh=bGtvcmZrcGh2bGNp"},{label:"Post 2 — Video (IGTV)",url:"https://www.instagram.com/tv/CgRStZAJegC/?igsh=MW82anpmejRoYTQ2cA=="},{label:"Post 3 — Video (IGTV)",url:"https://www.instagram.com/tv/Cgs3XfJFoQR/?igsh=ZmJ5Y3NvZGx6bjVv"},{label:"Post 4 — Photo Post",url:"https://www.instagram.com/p/ChmXSs8lRo3/?igsh=MWdwMjJvMjYydnkzdg=="},{label:"Post 5 — Photo Post",url:"https://www.instagram.com/p/CiRcT_xvMxB/?igsh=M2hnbjIzZjZ3d2o4"}],spineColor:"#c4907a",textColor:"#1e1d3a",width:62,height:234,font:"sans"},
+      {id:2,category:"social-media",title:"City Gallery Campaign",shortTitle:"City Gallery",tag:"Internship",role:"Social Media Copywriting & Design",teaser:"25th Anniversary HKSAR campaign — crafting stories for a cultural institution in Traditional Chinese.",desc:"During my internship at City Gallery — a government-run public gallery in Central, Hong Kong — I contributed to a series of social media posts celebrating the 25th Anniversary of the Hong Kong Special Administrative Region. My role spanned both copywriting and visual content: writing captions in Traditional Chinese to reflect the bilingual cultural identity of the gallery and its audience, and participating in the design of post visuals for Instagram and Facebook. The content ranged from exhibition highlights and heritage storytelling to event promotions and short-form video posts, each crafted to deepen community connection with the gallery's programming and the significance of the anniversary milestone.",image:"https://raw.githubusercontent.com/cymn-lab/photo-lab/main/Portfolio%20website%20cover%20pic/Portfolio%20website%20cover%20pic_City%20Gallery.jpg",posts:[{label:"Post 1 — Photo Post",url:"https://www.instagram.com/p/ChZQ78BAvmo/?igsh=bGtvcmZrcGh2bGNp"},{label:"Post 2 — Video (IGTV)",url:"https://www.instagram.com/tv/CgRStZAJegC/?igsh=MW82anpmejRoYTQ2cA=="},{label:"Post 3 — Video (IGTV)",url:"https://www.instagram.com/tv/Cgs3XfJFoQR/?igsh=ZmJ5Y3NvZGx6bjVv"},{label:"Post 4 — Photo Post",url:"https://www.instagram.com/p/ChmXSs8lRo3/?igsh=MWdwMjJvMjYydnkzdg=="},{label:"Post 5 — Photo Post",url:"https://www.instagram.com/p/CiRcT_xvMxB/?igsh=M2hnbjIzZjZ3d2o4"}],spineColor:"#c4907a",textColor:"#1e1d3a",width:62,height:234,font:"sans"},
       {id:3,category:"social-media",title:"Lions Share HK Campaign",shortTitle:"Lions Share",tag:"Work Project",role:"Social Media Design & Copywriting",teaser:"Social media content for @lions.share_hk — financial literacy posts that make money make sense.",desc:"A content creation project for @lions.share_hk, a Prudential Insurance initiative built to recruit and nurture fresh graduates entering the financial industry in Hong Kong. Working on the social media presence, I designed visual posts and wrote the captions for Instagram — crafting content around financial management topics to attract and educate a young audience. The goal was to make finance feel approachable and aspirational, not intimidating: speaking directly to graduates figuring out their first steps into the industry with clear, engaging, and visually consistent content.",image:"https://raw.githubusercontent.com/cymn-lab/photo-lab/main/Lion's%20Share%20Post%20designs/140ED17B-2F5F-46B7-B377-E85197DFD8FF.JPG",images:[{src:"https://raw.githubusercontent.com/cymn-lab/photo-lab/main/Lion's%20Share%20Post%20designs/140ED17B-2F5F-46B7-B377-E85197DFD8FF.JPG",caption:"Financial management content — making money make sense"},{src:"https://raw.githubusercontent.com/cymn-lab/photo-lab/main/Lion's%20Share%20Post%20designs/Screenshot%202022-09-12%20at%207.23.18%20PM.PNG",caption:"Instagram post — financial literacy for fresh graduates"},{src:"https://raw.githubusercontent.com/cymn-lab/photo-lab/main/Lion's%20Share%20Post%20designs/Screenshot%202022-09-25%20at%207.01.53%20PM.PNG",caption:"Campaign visual — aspirational yet grounded"},{src:"https://raw.githubusercontent.com/cymn-lab/photo-lab/main/Lion's%20Share%20Post%20designs/Screenshot%202022-09-30%20at%201.17.43%20PM.PNG",caption:"Post design — consistent voice across the feed"},{src:"https://raw.githubusercontent.com/cymn-lab/photo-lab/main/Lion's%20Share%20Post%20designs/c19f7d67-1b7f-40ae-a787-e60e2c077037.JPG",caption:"Engagement content — attracting the right audience"}],carousel:true,autoplay:true,link:"https://www.instagram.com/lions.share_hk?igsh=MXJpMGhxa3BmM3VxNQ%3D%3D&utm_source=qr",spineColor:"#2a2850",textColor:"#d4bc6a",width:50,height:220,font:"serif"},
       {id:4,category:"branding-design",title:"Personal Name Card Design",shortTitle:"Name Card",tag:"School Project",role:"Graphic Design & Personal Branding",teaser:"Two sides of one identity — a name card that tells the full story before a word is spoken.",desc:"A personal name card designed as a school project — but built with the conviction that a name card is never just contact information; it is the first sentence of your creative identity. The front face leads with visual personality: typographic choices, colour, and layout that immediately signal how I think about design. The back holds the practical details, with some personal information redacted for privacy. Every decision — the typeface weight, the spatial rhythm, the way the two sides speak to each other — was made to ensure that whoever receives this card understands something true about me before I have finished introducing myself.",image:"https://raw.githubusercontent.com/cymn-lab/photo-lab/main/Name%20card%20design/Name%20card%20design_front.PNG",flipCard:true,frontImage:"https://raw.githubusercontent.com/cymn-lab/photo-lab/main/Name%20card%20design/Name%20card%20design_front.PNG",backImage:"https://raw.githubusercontent.com/cymn-lab/photo-lab/main/Name%20card%20design/Name%20card%20design_back.PNG",spineColor:"#d4bc6a",textColor:"#1e1d3a",width:56,height:242,font:"sans"},
       {id:5,category:"branding-design",title:"Freedom of Speech Logo",shortTitle:"Free Speech",tag:"School Project",role:"Logo Design",teaser:"A brain-as-speech-bubble mark — where every thought finds its own pathway out.",desc:"A logo design built around a single conviction: no two people think alike, and expression should never be forced into a single shape. The mark fuses a brain with a speech bubble — the brain rendered as a landscape of branching map-like pathways, each route representing a different way a thought can travel before it becomes a word, an image, or an idea shared with the world. There is no straight line from thought to expression; there are only the winding, personal routes each individual takes. The logo exists in both colour and black-and-white, each version carrying the same philosophy — freedom of speech is not about volume, it is about the right to find your own path.",image:"https://raw.githubusercontent.com/cymn-lab/photo-lab/main/Freedom%20of%20speech%20logo.png",images:[{src:"https://raw.githubusercontent.com/cymn-lab/photo-lab/main/Freedom%20of%20speech%20logo.png",caption:"Logo Design — colour version"},{src:"https://raw.githubusercontent.com/cymn-lab/photo-lab/main/Freedom%20of%20speech%20logo%20B%26W%202.png",caption:"Logo Design — black & white, version 1"},{src:"https://raw.githubusercontent.com/cymn-lab/photo-lab/main/Freedom%20of%20speech%20logo%20B%26W%201.png",caption:"Logo Design — black & white, version 2"}],spineColor:"#a09dc0",textColor:"#1e1d3a",width:44,height:218,font:"serif"},
       {id:6,category:"illustrations",title:"HKETO Toronto Collaboration",shortTitle:"HKETO Collab",tag:"Collaboration",role:"Illustration & Cultural Storytelling",teaser:"CNY promotional video for the Hong Kong Economic and Trade Office in Toronto — bringing @fibu.draw characters to life for the diaspora.",desc:"A collaboration with the Hong Kong Economic and Trade Office (HKETO) in Toronto, where my @fibu.draw illustrations were selected to feature in a festive Chinese New Year promotional video. The video was created to celebrate the Lunar New Year with the Hong Kong diaspora community across Canada, using the warmth and softness of my minimalist character style to carry a message of togetherness and cultural pride across the distance. Seeing the characters — originally drawn as a personal creative practice — brought into an official government cultural outreach piece was a meaningful moment: proof that small, personal things can travel far.",image:"https://raw.githubusercontent.com/cymn-lab/photo-lab/main/Fibu.draw_Me_HKETO.JPG",images:[{src:"https://raw.githubusercontent.com/cymn-lab/photo-lab/main/Fibu.draw_Me_HKETO.JPG",caption:"Nicole with the HKETO Toronto collaboration feature 🌸"}],link:"https://drive.google.com/file/d/1yJZHEqUFnDqq00yBI2g6N-Keqr4bADyc/view",linkLabel:"Watch the Video ↗",spineColor:"#b5907a",textColor:"#1e1d3a",width:60,height:238,font:"sans"},
-      {id:7,category:"marketing-campaigns",title:"AGO Digital Marketing Plan",shortTitle:"AGO Digital",tag:"School Project",role:"Digital Marketing Strategy",teaser:"'Discover a Palette of Peace' — digital strategy for the Art Gallery of Ontario.",desc:"Campaign: 'Discover a Palette of Peace at AGO'. Objectives: 15% increase in conversion rate from free to paid passholders + 20% increase in email open rates. Target: Health-conscious, educated 25-27 year-olds in Greater Toronto Area. Tactics: Video ads, influencer partnerships, paid social advertising, and OOH digital programmatic.",image:"https://images.unsplash.com/photo-1561070791-2526d30994b5?q=80&w=1200&auto=format&fit=crop",link:"https://drive.google.com/file/d/1xe6yAqHipMCkcTYxX5OFK30GupWxUYAd/view?usp=sharing",spineColor:"#2a2850",textColor:"#d4bc6a",width:68,height:248,font:"serif"},
+      {id:7,category:"marketing-campaigns",title:"AGO Digital Marketing Plan",shortTitle:"AGO Digital",tag:"School Project",role:"Digital Marketing Strategy",teaser:"A full digital marketing plan for the Art Gallery of Ontario — turning free visitors into lifelong members.",desc:"A comprehensive digital marketing plan developed for the Art Gallery of Ontario, centred on the campaign concept 'Discover a Palette of Peace at AGO'. The brief targeted health-conscious, educated adults aged 25–27 in the Greater Toronto Area — a demographic seeking meaningful cultural experiences but not yet committed to paid membership. The plan sets two clear objectives: a 15% increase in conversion rate from free to paid passholders, and a 20% increase in email open rates. To achieve this, the strategy draws on a multi-channel mix — video advertising to build emotional resonance, influencer partnerships to reach the audience through trusted voices, paid social advertising for targeted awareness, and OOH digital programmatic to capture attention in high-traffic urban moments. The underlying insight is that peace and creativity are increasingly rare commodities for this generation; the AGO positions itself not as a museum, but as a sanctuary.",image:"https://raw.githubusercontent.com/cymn-lab/photo-lab/main/Portfolio%20website%20cover%20pic/Portfolio%20website%20cover%20pic_AGO.jpg",link:"https://drive.google.com/file/d/1xe6yAqHipMCkcTYxX5OFK30GupWxUYAd/view?usp=sharing",spineColor:"#2a2850",textColor:"#d4bc6a",width:68,height:248,font:"serif"},
       {id:8,category:"social-media",title:"BowCoffee Labor Day Post",shortTitle:"BowCoffee",tag:"School Project",role:"Social Media Design & Copywriting",teaser:"Ice drip coffee post — a slow, meditative Labor Day ritual captured for Bow Coffee HK.",desc:"An exclusive Labor Day social media post designed for Bow Coffee, a specialty coffee shop in Hong Kong. The post promotes their signature ice drip coffee — a slow, methodical brew that mirrors the pace of a well-earned day off. The visual design and caption work together to frame Labor Day not just as a holiday, but as an invitation to slow down, savour the process, and enjoy something crafted with patience. The caption, written in Traditional Chinese, draws a parallel between the unhurried drip of ice coffee and the rare gift of unscheduled time — making it feel personal and seasonal, not merely promotional.",image:"https://raw.githubusercontent.com/cymn-lab/photo-lab/main/Archive/BowCoffee%20Post%20design.png",images:[{src:"https://raw.githubusercontent.com/cymn-lab/photo-lab/main/Archive/BowCoffee%20Post%20design.png",caption:"Post Design — Labor Day ice drip coffee promotion"},{src:"https://raw.githubusercontent.com/cymn-lab/photo-lab/main/Archive/BowCoffee%20Post%20Caption.png",caption:"Caption Design — Traditional Chinese copy for the post"}],spineColor:"#c4a882",textColor:"#1e1d3a",width:52,height:226,font:"sans"},
       {id:9,category:"marketing-campaigns",title:"50AddOil Online Rummikub Workshop",shortTitle:"50AddOil",tag:"School Project",role:"Social Media Design & Campaign Strategy",teaser:"Pandemic-era digital sanctuary — Rummikub for the young-at-heart 50+ community, in Traditional Chinese.",desc:"A social media campaign and promotional design project created for 50AddOil, an initiative supporting the 50+ community in Hong Kong. During the pandemic, in-person gatherings became impossible — so this project introduced an online Rummikub workshop as a way to bring the community together virtually. Rummikub was chosen as an accessible, mentally stimulating alternative to mahjong that could be played safely from home, entirely free of charge. The promotional materials — an Instagram post, an event poster, and a video thumbnail — were all written and designed in Traditional Chinese to reach the target audience directly. The goal was to make the workshop feel warm and welcoming, not institutional: an invitation to play, connect, and keep the mind active, no matter the distance.",image:"https://raw.githubusercontent.com/cymn-lab/photo-lab/main/50AddOil%20Online%20Rummikub%20Workshop/50AddOil%20Online%20Rummikub%20Workshop%20Online%20Post.png",images:[{src:"https://raw.githubusercontent.com/cymn-lab/photo-lab/main/50AddOil%20Online%20Rummikub%20Workshop/50AddOil%20Online%20Rummikub%20Workshop%20Online%20Post.png",caption:"Instagram Post — 社交媒體推廣內容"},{src:"https://raw.githubusercontent.com/cymn-lab/photo-lab/main/50AddOil%20Online%20Rummikub%20Workshop/50AddOil%20Online%20Rummikub%20Workshop%20Poster.png",caption:"Event Poster — 活動海報設計"},{src:"https://raw.githubusercontent.com/cymn-lab/photo-lab/main/50AddOil%20Online%20Rummikub%20Workshop/50AddOil%20Online%20Rummikub%20Workshop%20Vid.png",caption:"Video Thumbnail — 影片封面設計"}],carousel:true,autoplay:true,spineColor:"#7a7aaa",textColor:"#e8e0ff",width:58,height:232,font:"serif"},
       {id:11,category:"marketing-campaigns",title:"Breakup Tours OOH Campaign",shortTitle:"Breakup Tours",tag:"School Project",role:"Poster Design & Campaign Strategy",teaser:"Poignant OOH posters — a gentle nudge to reclaim your inner child.",desc:"Designed to promote 'Breakup with Myself' — a new tour by Breakup Tours — this five-poster OOH series carries a quiet, tender thesis: we forget how childlike and optimistic we once were. Each poster depicts the same individual at a different stage of life, youngest to oldest, tracing the arc from open-hearted wonder to the weight of adulthood. The shifting facial expressions and appearances are the campaign's core visual language. Backgrounds are layered with Chinese lyrics from Endy Chow's 'Children Song' — a song about growth and the courage to embrace your inner child — so the words themselves become atmosphere. The invitation: break up with who you've become, and find your way back to yourself.",image:"https://raw.githubusercontent.com/cymn-lab/photo-lab/main/Breakup%20Tours%20Poster/Breakup%20Tours%20Poster%201.png",images:[{src:"https://raw.githubusercontent.com/cymn-lab/photo-lab/main/Breakup%20Tours%20Poster/Breakup%20Tours%20Poster%201.png",caption:"Poster 1 — Youngest · the untouched beginning"},{src:"https://raw.githubusercontent.com/cymn-lab/photo-lab/main/Breakup%20Tours%20Poster/Breakup%20Tours%20Poster%202.png",caption:"Poster 2 — Early childhood · curiosity still whole"},{src:"https://raw.githubusercontent.com/cymn-lab/photo-lab/main/Breakup%20Tours%20Poster/Breakup%20Tours%20Poster%203.png",caption:"Poster 3 — Adolescence · the self starts to guard itself"},{src:"https://raw.githubusercontent.com/cymn-lab/photo-lab/main/Breakup%20Tours%20Poster/Breakup%20Tours%20Poster%204.png",caption:"Poster 4 — Young adult · layers accumulated"},{src:"https://raw.githubusercontent.com/cymn-lab/photo-lab/main/Breakup%20Tours%20Poster/Breakup%20Tours%20Poster%205.png",caption:"Poster 5 — Adult · the one who needs to break up with themselves"}],spineColor:"#d4bc6a",textColor:"#1e1d3a",width:64,height:240,font:"serif"},
-      {id:12,category:"marketing-campaigns",title:"Hakuna Matata: HK Disneyland",shortTitle:"Hakuna Matata",tag:"Marketing Campaign",role:"Internal Communications",teaser:"Rekindling Cast Member well-being at HK Disneyland through a 3-phase strategy.",desc:"Behind the enchanting gates of Hong Kong Disneyland, a quiet magic needed rekindling. The 'Hakuna Matata' initiative was a strategic internal communications proposal crafted to revitalize the spirit of frontline Cast Members through a three-phased approach of self-care tools, cross-training programs, and appreciation events.",image:"https://images.unsplash.com/photo-1552664730-d307ca884978?q=80&w=1200&auto=format&fit=crop",link:"https://drive.google.com/file/d/1_-ypF7SzLsPS2yi6esXJkliuROYUIQpw/view?usp=sharing",linkLabel:"View Project Proposal ↗",spineColor:"#2a2850",textColor:"#d4bc6a",width:70,height:244,font:"serif"},
+      {id:12,category:"marketing-campaigns",title:"Hakuna Matata: HK Disneyland",shortTitle:"Hakuna Matata",tag:"Marketing Campaign",role:"Internal Communications",teaser:"Rekindling Cast Member well-being at HK Disneyland through a 3-phase strategy.",desc:"Behind the enchanting gates of Hong Kong Disneyland, a quiet magic needed rekindling. The 'Hakuna Matata' initiative was a strategic internal communications proposal crafted to revitalize the spirit of frontline Cast Members through a three-phased approach of self-care tools, cross-training programs, and appreciation events.",image:"https://raw.githubusercontent.com/cymn-lab/photo-lab/main/Portfolio%20website%20cover%20pic/Portfolio%20website%20cover%20pic_Disney.jpg",link:"https://drive.google.com/file/d/1_-ypF7SzLsPS2yi6esXJkliuROYUIQpw/view?usp=sharing",linkLabel:"View Project Proposal ↗",spineColor:"#2a2850",textColor:"#d4bc6a",width:70,height:244,font:"serif"},
       {id:13,category:"branding-design",title:"Human Advertising Agency",shortTitle:"Human Agency",tag:"Branding & Identity",role:"Logo Design & Poster Design",teaser:"Ideas born from emotion, not algorithm — a brand identity for a firm that thinks as humans do.",desc:"As the assumed founder of Human Advertising Agency, I built an identity around a single conviction: every idea we produce carries the fingerprint of a real human thought — imperfect, emotional, and unrepeatable. Unlike outputs from a machine or a formula, our work cannot be duplicated. The logo distils this philosophy into a mark that feels alive. The accompanying poster leans into the language of science — formulas, variables, equations — and subverts it: the formula for great advertising is not reproducible, because the variables are human. We think, therefore we create differently.",image:"https://raw.githubusercontent.com/cymn-lab/photo-lab/main/Human%20Advertising%20Agency/Human%20Advertising%20Company%20Poster.png",images:[{src:"https://raw.githubusercontent.com/cymn-lab/photo-lab/main/Human%20Advertising%20Agency/Human%20Advertising%20Company%20Poster.png",caption:"Campaign Poster — ideas as living equations"},{src:"https://raw.githubusercontent.com/cymn-lab/photo-lab/main/Human%20Advertising%20Agency/Human%20Advertising%20Company%20icon.png",caption:"Logo Design (Colour)"},{src:"https://raw.githubusercontent.com/cymn-lab/photo-lab/main/Human%20Advertising%20Agency/Human%20Advertising%20Company%20icon%20B%26W.png",caption:"Logo Design (Black & White)"}],spineColor:"#3a2e1e",textColor:"#d4bc6a",width:66,height:242,font:"serif"},
-      {id:14,category:"social-media",title:"Run to the Moon 2021",shortTitle:"Run to Moon",tag:"Social Media",role:"Social Media Design & Copywriting",teaser:"Three-page Instagram post inviting the WE+ community to run — and give — under the moon.",desc:"A 3-page social media post crafted for WE+ Community by SVHK, promoting their 'Run to the Moon 2021' running class in partnership with RunOurCity. The caption opens with a playful nudge — 你今日跑啱未？(Did you run right today?) — before revealing that most of us have been running wrong all along. The post then introduces 《登月起跑班》, a 4-session Thursday evening running class along the Wan Chai harbourfront, led by professional coaches covering proper form, injury prevention, and mind-body training. The deeper story: the class is a charity fundraiser — every kilometre logged counts toward the 'Run to the Moon 2021' mission, with all proceeds going to a running training programme for students with special learning needs. The design spans three pages: a cover that sets the mood, a technique breakdown page, and a closing page with all event details, pricing, and sign-up links.",image:"https://images.unsplash.com/photo-1552674605-db6ffd4facb5?q=80&w=1200&auto=format&fit=crop",pages:[{label:"Cover Page",caption:"The opening — setting the mood and the moon",url:"https://raw.githubusercontent.com/cymn-lab/photo-lab/main/RUN%20TO%20THE%20MOON%20RUNNING%20CLASS%20copy%202.pdf"},{label:"Page 2",caption:"Running posture breakdown — spot the wrong ones",url:"https://raw.githubusercontent.com/cymn-lab/photo-lab/main/RUN%20TO%20THE%20MOON%20RUNNING%20CLASS%20copy%203.pdf"},{label:"Page 3",caption:"Event details, pricing & sign-up",url:"https://raw.githubusercontent.com/cymn-lab/photo-lab/main/RUN%20TO%20THE%20MOON%20RUNNING%20CLASS%20copy%204.pdf"}],link:"https://www.instagram.com/p/CUXHzyigzb0/?img_index=2&igsh=MXJkYWliYWZzdnluZw%3D%3D%3D%3D",spineColor:"#1a3a5c",textColor:"#d4bc6a",width:54,height:230,font:"sans"},
-      {id:15,category:"branding-design",title:"Florence by Mills — Brand Show & Tell",shortTitle:"Florence Mills",tag:"School Project",role:"Brand Strategy & Presentation",teaser:"A deep-dive into Florence by Mills — decoding the brand DNA behind Millie Bobby Brown's Gen-Z beauty line.",desc:"A Brand Show & Tell presentation that unpacks Florence by Mills, the clean beauty brand co-founded by Millie Bobby Brown. The project explores how the brand speaks directly to Gen-Z through radical authenticity, skin-positive messaging, and a visual identity that feels more like a friend's bedroom than a beauty counter. The analysis covers brand positioning, tone of voice, visual language, target audience segmentation, and competitive landscape — examining how Florence by Mills carved a credible niche in an oversaturated market by leading with values over vanity.",image:"https://images.unsplash.com/photo-1596462502278-27bfdc403348?q=80&w=1200&auto=format&fit=crop",link:"https://drive.google.com/file/d/14UGtr0HHa3NeJOI0GKToWJWSQpD2UpRR/view?usp=sharing",linkLabel:"View Content ↗",spineColor:"#c4907a",textColor:"#1e1d3a",width:58,height:238,font:"serif"},
-      {id:16,category:"marketing-campaigns",title:"Uniqlo — Social Media Marketing Audit",shortTitle:"Uniqlo Audit",tag:"School Project",role:"Social Media Strategy & Audit",teaser:"A strategic audit of Uniqlo's social media presence — uncovering gaps, opportunities, and a roadmap for growth.",desc:"A comprehensive Social Media Marketing Audit examining Uniqlo's digital presence across key platforms. The project analyses content strategy, posting cadence, audience engagement, tone of voice, and competitive positioning against peers in the accessible fashion space. Drawing on platform analytics frameworks and brand benchmarking, the audit identifies where Uniqlo's social storytelling succeeds — its lifestyle-led, quietly confident visual language — and where opportunities exist to deepen community engagement and localise content for different markets. Delivered as a structured strategic report with actionable recommendations.",image:"https://images.unsplash.com/photo-1558769132-cb1aea458c5e?q=80&w=1200&auto=format&fit=crop",link:"https://drive.google.com/file/d/1ABmrMs1ZuL9nLs3ieif3Duk98kbbhtV4/view",linkLabel:"View Content ↗",spineColor:"#2e2e2e",textColor:"#FFFDD0",width:56,height:236,font:"sans"},
+      {id:14,category:"social-media",title:"Run to the Moon 2021",shortTitle:"Run to Moon",tag:"Social Media",role:"Social Media Design & Copywriting",teaser:"Three-page Instagram post inviting the WE+ community to run — and give — under the moon.",desc:"A 3-page social media post crafted for WE+ Community by SVHK, promoting their 'Run to the Moon 2021' running class in partnership with RunOurCity. The caption opens with a playful nudge — 你今日跑啱未？(Did you run right today?) — before revealing that most of us have been running wrong all along. The post then introduces 《登月起跑班》, a 4-session Thursday evening running class along the Wan Chai harbourfront, led by professional coaches covering proper form, injury prevention, and mind-body training. The deeper story: the class is a charity fundraiser — every kilometre logged counts toward the 'Run to the Moon 2021' mission, with all proceeds going to a running training programme for students with special learning needs. The design spans three pages: a cover that sets the mood, a technique breakdown page, and a closing page with all event details, pricing, and sign-up links.",image:"https://raw.githubusercontent.com/cymn-lab/photo-lab/main/Portfolio%20website%20cover%20pic/Portfolio%20website%20cover%20pic_Run%20to%20the%20Moon.jpg",pages:[{label:"Cover Page",caption:"The opening — setting the mood and the moon",url:"https://raw.githubusercontent.com/cymn-lab/photo-lab/main/RUN%20TO%20THE%20MOON%20RUNNING%20CLASS%20copy%202.pdf"},{label:"Page 2",caption:"Running posture breakdown — spot the wrong ones",url:"https://raw.githubusercontent.com/cymn-lab/photo-lab/main/RUN%20TO%20THE%20MOON%20RUNNING%20CLASS%20copy%203.pdf"},{label:"Page 3",caption:"Event details, pricing & sign-up",url:"https://raw.githubusercontent.com/cymn-lab/photo-lab/main/RUN%20TO%20THE%20MOON%20RUNNING%20CLASS%20copy%204.pdf"}],link:"https://www.instagram.com/p/CUXHzyigzb0/?img_index=2&igsh=MXJkYWliYWZzdnluZw%3D%3D%3D%3D",spineColor:"#1a3a5c",textColor:"#d4bc6a",width:54,height:230,font:"sans"},
+      {id:15,category:"branding-design",title:"Florence by Mills — Brand Show & Tell",shortTitle:"Florence Mills",tag:"School Project",role:"Brand Strategy & Presentation",teaser:"A deep-dive into Florence by Mills — decoding the brand DNA behind Millie Bobby Brown's Gen-Z beauty line.",desc:"A Brand Show & Tell presentation that unpacks Florence by Mills, the clean beauty brand co-founded by Millie Bobby Brown. The project explores how the brand speaks directly to Gen-Z through radical authenticity, skin-positive messaging, and a visual identity that feels more like a friend's bedroom than a beauty counter. The analysis covers brand positioning, tone of voice, visual language, target audience segmentation, and competitive landscape — examining how Florence by Mills carved a credible niche in an oversaturated market by leading with values over vanity.",image:"https://raw.githubusercontent.com/cymn-lab/photo-lab/main/Portfolio%20website%20cover%20pic/Portfolio%20website%20cover%20pic_Florence%20by%20Mills.jpg",link:"https://drive.google.com/file/d/14UGtr0HHa3NeJOI0GKToWJWSQpD2UpRR/view?usp=sharing",linkLabel:"View Content ↗",spineColor:"#c4907a",textColor:"#1e1d3a",width:58,height:238,font:"serif"},
+      {id:16,category:"marketing-campaigns",title:"Uniqlo — Social Media Marketing Audit",shortTitle:"Uniqlo Audit",tag:"School Project",role:"Social Media Strategy & Audit",teaser:"A strategic audit of Uniqlo's social media presence — uncovering gaps, opportunities, and a roadmap for growth.",desc:"A comprehensive Social Media Marketing Audit examining Uniqlo's digital presence across key platforms. The project analyses content strategy, posting cadence, audience engagement, tone of voice, and competitive positioning against peers in the accessible fashion space. Drawing on platform analytics frameworks and brand benchmarking, the audit identifies where Uniqlo's social storytelling succeeds — its lifestyle-led, quietly confident visual language — and where opportunities exist to deepen community engagement and localise content for different markets. Delivered as a structured strategic report with actionable recommendations.",image:"https://raw.githubusercontent.com/cymn-lab/photo-lab/main/Portfolio%20website%20cover%20pic/Portfolio%20website%20cover%20pic_Uniqlo.jpg",link:"https://drive.google.com/file/d/1ABmrMs1ZuL9nLs3ieif3Duk98kbbhtV4/view",linkLabel:"View Content ↗",spineColor:"#2e2e2e",textColor:"#FFFDD0",width:56,height:236,font:"sans"},
     ];
 
     const FILTERS = [
