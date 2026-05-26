@@ -1149,7 +1149,16 @@
             #guestbook .grid { grid-template-columns: 1fr !important; }
             #guestbook .md\:grid-cols-2,
             #guestbook .lg\:grid-cols-3 { grid-template-columns: 1fr !important; }
-            .flipping-book-container { height: 340px !important; }
+            /* Guestbook — tall enough to show full form when flipped */
+            .flipping-book-container { height: 540px !important; }
+            .flipping-book-inner,
+            .flipping-book-cover,
+            .flipping-book-pages { height: 540px !important; }
+            /* Tighten internal padding so everything fits */
+            .flipping-book-pages > div { padding-left: 1.25rem !important; padding-right: 1.25rem !important; }
+            #guestbook-form { padding-top: 0.5rem !important; padding-bottom: 0.5rem !important; }
+            .book-input { padding: 0.45rem 0.7rem !important; font-size: 13px !important; }
+            textarea.book-input { min-height: 62px !important; }
 
             /* Stardust quote — tap to reveal (already handled by JS click listener) */
             #stardust-quote { font-size: 1rem !important; line-height: 1.9 !important; }
