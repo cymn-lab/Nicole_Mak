@@ -1038,50 +1038,62 @@
                 width: 100% !important;
                 height: 100% !important;
             }
-            /* Glass: remove ALL bleed-causing effects — outline paints outside border-radius,
-               outer box-shadow bleeds past arch, backdrop-blur creates halo at arch edge */
+            /* Glass: kill ALL sources of arch bleed */
             #win-glass {
                 border-radius: 110px 110px 6px 6px !important;
                 border-width: 8px !important;
                 box-shadow: none !important;
+                -webkit-box-shadow: none !important;
                 outline: none !important;
                 backdrop-filter: none !important;
                 -webkit-backdrop-filter: none !important;
+                filter: none !important;
             }
+            /* Override Tailwind shadow-2xl specifically */
+            .shadow-2xl#win-glass { box-shadow: none !important; }
+            /* Gloomy overlay — mix-blend-mode:multiply bleeds; force normal on mobile */
+            #win-gloomy { mix-blend-mode: normal !important; }
+            /* Sun/moon — no glow */
+            #win-sun  { box-shadow: none !important; filter: none !important; }
+            #win-moon { box-shadow: none !important; filter: none !important; }
             /* Pane border arch scaled to match */
             .window-pane-border { border-radius: 100px 100px 3px 3px !important; }
-            /* Sun/moon glow removed */
-            #win-sun  { box-shadow: none !important; }
-            #win-moon { box-shadow: none !important; }
-            /* Sill */
-            .window-sill { height: 14px !important; }
+            /* Sill — no shadow bleed */
+            .window-sill { height: 14px !important; box-shadow: none !important; }
 
-            /* Hint — hidden, revealed on tap via JS (no hover on mobile) */
+            /* Hint — revealed on tap, positioned OUTSIDE the window's stacking context */
+            #about-window { overflow: visible !important; }
             #win-hint-tag {
-                bottom: -38px !important;
+                position: absolute !important;
+                bottom: -44px !important;
+                left: 50% !important;
+                right: auto !important;
+                transform: translateX(-50%) translateY(4px) !important;
+                width: max-content !important;
+                max-width: 280px !important;
                 opacity: 0 !important;
-                transform: translateY(4px) !important;
-                left: -20px !important;
-                right: -20px !important;
                 transition: opacity 0.35s ease, transform 0.35s ease !important;
+                pointer-events: none !important;
+                z-index: 999 !important;
             }
             #win-hint-tag.mobile-visible {
                 opacity: 1 !important;
-                transform: translateY(0) !important;
+                transform: translateX(-50%) translateY(0) !important;
             }
             #win-hint-tag .journey-tag-card {
-                padding: 7px 14px !important;
+                padding: 8px 16px !important;
                 white-space: nowrap !important;
                 font-size: 9px !important;
+                letter-spacing: 0.05em !important;
             }
-            /* Scrubber */
+            /* Scrubber — also centred and outside overflow */
             #win-time-wrap {
-                bottom: -82px !important;
-                left: -20px !important;
-                right: -20px !important;
+                bottom: -90px !important;
+                left: 50% !important;
+                right: auto !important;
+                transform: translateX(-50%) !important;
+                width: 280px !important;
             }
-            .win-scrubber-card { padding: 6px 8px !important; }
-            #win-time-label { font-size: 8px !important; }
 
             /* About bio right column */
             #about .flex.justify-center { justify-content: center !important; }
