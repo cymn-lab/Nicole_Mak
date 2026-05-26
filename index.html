@@ -1056,7 +1056,7 @@
             /* Sill */
             .window-sill { height: 14px !important; }
 
-            /* Hint — hidden, revealed on touchstart via JS (no hover on mobile) */
+            /* Hint — hidden, revealed on tap via JS (no hover on mobile) */
             #win-hint-tag {
                 bottom: -38px !important;
                 opacity: 0 !important;
@@ -1064,6 +1064,10 @@
                 left: -20px !important;
                 right: -20px !important;
                 transition: opacity 0.35s ease, transform 0.35s ease !important;
+            }
+            #win-hint-tag.mobile-visible {
+                opacity: 1 !important;
+                transform: translateY(0) !important;
             }
             #win-hint-tag .journey-tag-card {
                 padding: 7px 14px !important;
@@ -1076,11 +1080,6 @@
                 left: -20px !important;
                 right: -20px !important;
             }
-
-            /* Hint & scrubber: tighten */
-            .win-hint-pill,
-            [id="win-hint-tag"] { font-size: 7px !important; padding: 5px 10px !important; }
-            #win-time-wrap { bottom: -72px !important; }
             .win-scrubber-card { padding: 6px 8px !important; }
             #win-time-label { font-size: 8px !important; }
 
@@ -3198,22 +3197,35 @@
                 tRafId = done ? (inner.style.transform=`rotateX(${tx}deg) rotateY(${ty}deg)`, null) : requestAnimationFrame(tiltLoop);
             }
 
-            // ── 2. CURTAIN FLUTTER on hover ──
+            // ── 2. CURTAIN FLUTTER on hover (desktop only) ──
             const curtL    = document.getElementById('win-curtain-l');
             const curtR    = document.getElementById('win-curtain-r');
-            const hintTag  = document.getElementById('win-hint-tag');
-            glass.addEventListener('mouseenter', () => {
-                if (curtL) curtL.style.transform = 'skewY(-4deg) translateX(-3px)';
-                if (curtR) curtR.style.transform = 'skewY(4deg) translateX(3px)';
-                if (hintTag) { hintTag.style.opacity = '1'; hintTag.style.transform = 'translateY(0)'; }
-            });
-            glass.addEventListener('mouseleave', () => {
-                if (curtL) curtL.style.transform = '';
-                if (curtR) curtR.style.transform = '';
-                if (hintTag) { hintTag.style.opacity = '0'; hintTag.style.transform = 'translateY(4px)'; }
-            });
 
-            // ── 3. HINT — always visible below sill (no JS needed) ──
+            // ── 3. HINT — hover on desktop, click-to-show on mobile ──
+            const hintTag  = document.getElementById('win-hint-tag');
+            const isMobileDevice = window.matchMedia('(max-width: 767px)').matches;
+            if (!isMobileDevice) {
+                // Desktop: show/hide on hover
+                glass.addEventListener('mouseenter', () => {
+                    if (curtL) curtL.style.transform = 'skewY(-4deg) translateX(-3px)';
+                    if (curtR) curtR.style.transform = 'skewY(4deg) translateX(3px)';
+                    if (hintTag) { hintTag.style.opacity = '1'; hintTag.style.transform = 'translateY(0)'; }
+                });
+                glass.addEventListener('mouseleave', () => {
+                    if (curtL) curtL.style.transform = '';
+                    if (curtR) curtR.style.transform = '';
+                    if (hintTag) { hintTag.style.opacity = '0'; hintTag.style.transform = 'translateY(4px)'; }
+                });
+            } else {
+                // Mobile: tap glass shows hint for 2.5s then auto-hides
+                var hintTimer = null;
+                glass.addEventListener('touchstart', () => {
+                    if (!hintTag) return;
+                    hintTag.classList.add('mobile-visible');
+                    clearTimeout(hintTimer);
+                    hintTimer = setTimeout(() => hintTag.classList.remove('mobile-visible'), 2500);
+                }, { passive: true });
+            }
 
             // Mobile touch: show hint on touchstart, hide after 2s
             (function() {
