@@ -1038,40 +1038,39 @@
                 width: 100% !important;
                 height: 100% !important;
             }
-            /* Glass fills the tilt-inner, border-radius clips all scenery */
+            /* Glass: remove ALL bleed-causing effects — outline paints outside border-radius,
+               outer box-shadow bleeds past arch, backdrop-blur creates halo at arch edge */
             #win-glass {
                 border-radius: 110px 110px 6px 6px !important;
                 border-width: 8px !important;
-                box-shadow: 0 4px 16px rgba(46,58,77,0.16) !important;
+                box-shadow: none !important;
                 outline: none !important;
+                backdrop-filter: none !important;
+                -webkit-backdrop-filter: none !important;
             }
-            /* Window pane border follows arch */
-            .window-pane-border {
-                border-radius: 100px 100px 3px 3px !important;
-            }
-            /* Kill external glows that bleed outside arch */
+            /* Pane border arch scaled to match */
+            .window-pane-border { border-radius: 100px 100px 3px 3px !important; }
+            /* Sun/moon glow removed */
             #win-sun  { box-shadow: none !important; }
             #win-moon { box-shadow: none !important; }
             /* Sill */
             .window-sill { height: 14px !important; }
 
-            /* Hint — always visible on mobile (no hover state on touch) */
+            /* Hint — hidden, revealed on touchstart via JS (no hover on mobile) */
             #win-hint-tag {
-                bottom: -36px !important;
-                opacity: 1 !important;
-                transform: translateY(0) !important;
+                bottom: -38px !important;
+                opacity: 0 !important;
+                transform: translateY(4px) !important;
                 left: -20px !important;
                 right: -20px !important;
+                transition: opacity 0.35s ease, transform 0.35s ease !important;
             }
-            /* Hint text wrap on small screen */
             #win-hint-tag .journey-tag-card {
                 padding: 7px 14px !important;
-                white-space: normal !important;
-                text-align: center !important;
+                white-space: nowrap !important;
                 font-size: 9px !important;
-                gap: 6px !important;
             }
-            /* Scrubber closer to hint */
+            /* Scrubber */
             #win-time-wrap {
                 bottom: -82px !important;
                 left: -20px !important;
@@ -3215,6 +3214,22 @@
             });
 
             // ── 3. HINT — always visible below sill (no JS needed) ──
+
+            // Mobile touch: show hint on touchstart, hide after 2s
+            (function() {
+                var hint = document.getElementById('win-hint-tag');
+                var hintTimer = null;
+                if (!hint || !glass) return;
+                glass.addEventListener('touchstart', function() {
+                    hint.style.opacity = '1';
+                    hint.style.transform = 'translateY(0)';
+                    clearTimeout(hintTimer);
+                    hintTimer = setTimeout(function() {
+                        hint.style.opacity = '0';
+                        hint.style.transform = 'translateY(4px)';
+                    }, 2000);
+                }, { passive: true });
+            })();
 
             // ── 4. TIME-OF-DAY SCRUBBER ──
             const slider    = document.getElementById('win-time-slider');
